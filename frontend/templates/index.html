@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% include 'header.html' %}
+        <link rel="manifest" href="{% static 'manifest.json' %}"/>
+        <title>Weather</title>
+    </head>
+
+    <body>
+        <script src="{% static 'scripts/main.js' %}"></script>
+    </body>
+</html>
