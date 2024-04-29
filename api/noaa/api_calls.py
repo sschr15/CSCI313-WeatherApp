@@ -1,4 +1,3 @@
-from .types import Conditions
 from .parsing import *
 import requests
 
@@ -9,7 +8,7 @@ def current_data(latitude: float, longitude: float) -> Conditions:
     response = requests.get(url)
     response.raise_for_status()
     data = response.json()
-    forecast_url = data['properties']['forecast']
+    forecast_url = data['properties']['forecastGridData']
     response = requests.get(forecast_url)
     response.raise_for_status()
     data = response.json()

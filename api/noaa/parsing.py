@@ -13,7 +13,7 @@ def __current_weather(data: dict) -> WeatherCondition:
     return WeatherCondition(coverage, weather, intensity, visibility, attributes)
 
 
-def __current_hazards(data: dict) -> list[Hazard]:
+def __current_hazards(data: list) -> list[Hazard]:
     """Parse the current weather hazards from a gridpoint forecast."""
     hazards = []
     for hazard_period in data:
@@ -56,8 +56,8 @@ def current_conditions_from_gridpoint(data: dict) -> Conditions:
     wind_speed = data['windSpeed']['values'][0]['value']
     wind_gust = data['windGust']['values'][0]['value'] if 'windGust' in data else None
 
-    weather = __current_weather(data['weather']['values'][0]['value'])
-    hazards = __current_hazards(data['hazards'])
+    weather = __current_weather(data['weather']['values'][0]['value'][0])
+    hazards = __current_hazards(data['hazards']['values'])
 
     return Conditions(temperature, dewpoint, relative_humidity, apparent_temperature, heat_index, wind_chill,
                       sky_cover, wind_direction, wind_speed, wind_gust, weather, hazards)
