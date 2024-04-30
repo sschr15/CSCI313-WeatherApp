@@ -26,38 +26,32 @@ def __current_hazards(data: list) -> list[Hazard]:
     return hazards
 
 
-def current_conditions_from_gridpoint(data: dict) -> Conditions:
+def current_conditions_from_observation(data: dict) -> CurrentObservation:
     """Parse current conditions from a gridpoint forecast."""
 
-    temperature = data['temperature']['values'][0]['value']
-    if data['temperature']['uom'] == 'wmoUnit:degF':
-        temperature = (temperature - 32) * 5 / 9
+    observation_time = datetime.fromisoformat(data['timestamp'])
+    text_description = data['textDescription']
+    icon = data['icon']
+    present_weather: list[MetarPhenomenon] = data['presentWeather']
+    temperature = data['temperature']['value']
+    dewpoint = data['dewpoint']['value']
+    wind_direction = data['windDirection']['value']
+    wind_speed = data['windSpeed']['value']
+    wind_gust = data['windGust']['value']
+    barometric_pressure = data['barometricPressure']['value']
+    sea_level_pressure = data['seaLevelPressure']['value']
+    visibility = data['visibility']['value']
+    max_temperature = data['maxTemperatureLast24Hours']['value']
+    min_temperature = data['minTemperatureLast24Hours']['value']
+    precipitation_last_hour = data['precipitationLastHour']['value']
+    precipitation_last_3_hours = data['precipitationLast3Hours']['value']
+    precipitation_last_6_hours = data['precipitationLast6Hours']['value']
+    relative_humidity = data['relativeHumidity']['value']
+    wind_chill = data['windChill']['value']
+    heat_index = data['heatIndex']['value']
 
-    dewpoint = data['dewpoint']['values'][0]['value']
-    if data['dewpoint']['uom'] == 'wmoUnit:degF':
-        dewpoint = (dewpoint - 32) * 5 / 9
-
-    relative_humidity = data['relativeHumidity']['values'][0]['value']
-
-    apparent_temperature = data['apparentTemperature']['values'][0]['value']
-    if data['apparentTemperature']['uom'] == 'wmoUnit:degF':
-        apparent_temperature = (apparent_temperature - 32) * 5 / 9
-
-    heat_index = data['heatIndex']['values'][0]['value']
-    if data['heatIndex']['uom'] == 'wmoUnit:degF' and heat_index is not None:
-        heat_index = (heat_index - 32) * 5 / 9
-
-    wind_chill = data['windChill']['values'][0]['value']
-    if data['windChill']['uom'] == 'wmoUnit:degF' and wind_chill is not None:
-        wind_chill = (wind_chill - 32) * 5 / 9
-
-    sky_cover = data['skyCover']['values'][0]['value']
-    wind_direction = data['windDirection']['values'][0]['value']
-    wind_speed = data['windSpeed']['values'][0]['value']
-    wind_gust = data['windGust']['values'][0]['value'] if 'windGust' in data else None
-
-    weather = __current_weather(data['weather']['values'][0]['value'][0])
-    hazards = __current_hazards(data['hazards']['values'])
-
-    return Conditions(temperature, dewpoint, relative_humidity, apparent_temperature, heat_index, wind_chill,
-                      sky_cover, wind_direction, wind_speed, wind_gust, weather, hazards)
+    return CurrentObservation(observation_time, text_description, icon, present_weather, temperature, dewpoint,
+                              wind_direction, wind_speed, wind_gust, barometric_pressure, sea_level_pressure,
+                              visibility, max_temperature, min_temperature, precipitation_last_hour,
+                              precipitation_last_3_hours, precipitation_last_6_hours, relative_humidity,
+                              wind_chill, heat_index)

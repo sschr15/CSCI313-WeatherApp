@@ -71,6 +71,47 @@ NotableAttributesType = Literal[
     'tornadoes',  # as if one tornado wasn't enough
 ]
 
+MetarIntensityType = Literal[
+    'light',
+    'heavy',
+]
+
+MetarModifierType = Literal[
+    'patches',
+    'blowing',
+    'low_drifting',
+    'freezing',
+    'shallow',
+    'partial',
+    'showers',
+]
+
+MetarWeatherType = Literal[
+    'fog_mist',
+    'dust_storm',
+    'dust',
+    'drizzle',
+    'funnel_cloud',  # mmm, funnel cake
+    'fog',
+    'smoke',
+    'hail',
+    'snow_pellets',
+    'haze',
+    'ice_crystals',
+    'ice_pellets',
+    'dust_whirls',
+    'spray',
+    'rain',
+    'sand',
+    'snow_grains',
+    'snow',
+    'squalls',
+    'sand_storm',
+    'thunderstorms',
+    'unknown',
+    'volcanic_ash',
+]
+
 
 class VtecFixedIdentifier(Enum):
     Operational = "O"
@@ -298,3 +339,85 @@ class Conditions:
 
     hazards: list[Hazard]
     """The current weather hazards."""
+
+
+@dataclass
+class MetarPhenomenon:  # yes this is the name NOAA uses
+    """A representation of a decoded METAR phenomenon string."""
+
+    intensity: MetarIntensityType | None
+    """The intensity of the phenomenon, if applicable."""
+
+    modifier: MetarModifierType | None
+    """The modifier of the phenomenon, if applicable."""
+
+    weather: MetarWeatherType
+    """The type of weather phenomenon."""
+
+    rawString: str
+    """The raw METAR string for the phenomenon."""
+
+
+@dataclass
+class CurrentObservation:
+    """A snippet of the current weather observation."""
+
+    timestamp: datetime
+    """The timestamp of the observation."""
+
+    textDescription: str
+    """A short text description of the weather."""
+
+    icon: str  # deprecated by NOAA, but I care not one bit
+    """A URL to an icon representing the weather."""
+
+    presentWeather: list[MetarPhenomenon]
+    """The current weather conditions."""
+
+    temperature: float
+    """The temperature in degrees Celsius."""
+
+    dewpoint: float
+    """The dew point in degrees Celsius."""
+
+    windDirection: int
+    """The wind direction (direction it's coming from), in degrees."""
+
+    windSpeed: float
+    """The wind speed in kilometers per hour."""
+
+    windGust: float | None
+    """The wind gust speed in kilometers per hour, or None if not present in the data."""
+
+    barometricPressure: float
+    """The barometric pressure in pascals."""
+
+    seaLevelPressure: float
+    """The pressure if measured at sea level in pascals."""
+
+    visibility: float
+    """The visibility in kilometers."""
+
+    maxTemperatureLast24Hours: float | None
+    """The maximum temperature in the last 24 hours, or None if not present in the data."""
+
+    minTemperatureLast24Hours: float | None
+    """The minimum temperature in the last 24 hours, or None if not present in the data."""
+
+    precipitationLastHour: float
+    """The precipitation in the last hour in millimeters."""
+
+    precipitationLast3Hours: float | None
+    """The precipitation in the last 3 hours in millimeters, or None if not present in the data."""
+
+    precipitationLast6Hours: float | None
+    """The precipitation in the last 6 hours in millimeters, or None if not present in the data."""
+
+    relativeHumidity: float
+    """The relative humidity, in percent (scaled to 0-100, not rounded)."""
+
+    windChill: float | None
+    """The wind chill (cold feels-like), or None if not present in the data."""
+
+    heatIndex: float | None
+    """The heat index (hot feels-like), or None if not present in the data."""
