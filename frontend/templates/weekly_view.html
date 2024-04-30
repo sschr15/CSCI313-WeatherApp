@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="{% static 'css/styles.css' %}"/>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <link rel="manifest" href="{% static 'manifest.json' %}"/>
+        <title>Weather</title>
+    </head>
+
+    <body>
+        <script src="{% static 'scripts/main.js' %}"></script>
+        {% include 'header.html' %}
+        <div class="d-flex flex-row justify-content-end p-1">
+          <a href='/'>
+            <button style='background-color: blue; color: white;'>Hourly Weather</button>
+          </a>
+        </div>
+        <div class="container-fluid" style="font-size:40px;">
+            Favorite Places
+          </div>
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col"  display="flex" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Fargo <span style="float:right;">Current Temp: {{current_temp1}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp1}}wtHLDR&deg  {{sunday_wind1}}wwHLDR  {{sunday_short_forecast1}} wsfHLDR   <br>
+                Monday   {{monday_temp1}}wtHLDR&deg  {{monday_wind1}}wwHLDR  {{monday_short_forecast1}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp1}}wtHLDR&deg  {{tuesday_wind1}}wwHLDR  {{tuesday_short_forecast1}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp1}}wtHLDR&deg  {{wednesday_wind1}}wwHLDR  {{wednesday_short_forecast1}} wsfHLDR   <br>
+                Thursday   {{thursday_temp1}}wtHLDR&deg  {{thursday_wind1}}wwHLDR  {{thursday_short_forecast1}} wsfHLDR   <br>
+                Friday   {{friday_temp1}}wtHLDR&deg  {{friday_wind1}}wwHLDR  {{friday_short_forecast1}} wsfHLDR   <br>
+                Saturday   {{saturday_temp1}}wtHLDR&deg  {{saturday_wind1}}wwHLDR  {{saturday_short_forecast1}} wsfHLDR   <br>
+                </span>
+              </div>
+              <div class="col" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Location 2 <span style="float:right;">Current Temp: {{current_temp2}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp2}}wtHLDR&deg  {{sunday_wind2}}wwHLDR  {{sunday_short_forecast2}} wsfHLDR   <br>
+                Monday   {{monday_temp2}}wtHLDR&deg  {{monday_wind2}}wwHLDR  {{monday_short_forecast2}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp2}}wtHLDR&deg  {{tuesday_wind2}}wwHLDR  {{tuesday_short_forecast2}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp2}}wtHLDR&deg  {{wednesday_wind2}}wwHLDR  {{wednesday_short_forecast2}} wsfHLDR   <br>
+                Thursday   {{thursday_temp2}}wtHLDR&deg  {{thursday_wind2}}wwHLDR  {{thursday_short_forecast2}} wsfHLDR   <br>
+                Friday   {{friday_temp2}}wtHLDR&deg  {{friday_wind2}}wwHLDR  {{friday_short_forecast2}} wsfHLDR   <br>
+                Saturday   {{saturday_temp2}}wtHLDR&deg  {{saturday_wind2}}wwHLDR  {{saturday_short_forecast2}} wsfHLDR   <br>
+                </span>
+              </div>
+              <div class="col" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Location 3 <span style="float:right;">Current Temp: {{current_temp3}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp3}}wtHLDR&deg  {{sunday_wind3}}wwHLDR  {{sunday_short_forecast3}} wsfHLDR   <br>
+                Monday   {{monday_temp3}}wtHLDR&deg  {{monday_wind3}}wwHLDR  {{monday_short_forecast3}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp3}}wtHLDR&deg  {{tuesday_wind3}}wwHLDR  {{tuesday_short_forecast3}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp3}}wtHLDR&deg  {{wednesday_wind3}}wwHLDR  {{wednesday_short_forecast3}} wsfHLDR   <br>
+                Thursday   {{thursday_temp3}}wtHLDR&deg  {{thursday_wind3}}wwHLDR  {{thursday_short_forecast3}} wsfHLDR   <br>
+                Friday   {{friday_temp3}}wtHLDR&deg  {{friday_wind3}}wwHLDR  {{friday_short_forecast3}} wsfHLDR   <br>
+                Saturday   {{saturday_temp3}}wtHLDR&deg  {{saturday_wind3}}wwHLDR  {{saturday_short_forecast3}} wsfHLDR   <br>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="font-size:40px;">
+            Weather Near You
+          </div>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Location 4 <span style="float:right;">Current Temp: {{current_temp4}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp4}}wtHLDR&deg  {{sunday_wind4}}wwHLDR  {{sunday_short_forecast4}} wsfHLDR   <br>
+                Monday   {{monday_temp4}}wtHLDR&deg  {{monday_wind4}}wwHLDR  {{monday_short_forecast4}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp4}}wtHLDR&deg  {{tuesday_wind4}}wwHLDR  {{tuesday_short_forecast4}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp4}}wtHLDR&deg  {{wednesday_wind4}}wwHLDR  {{wednesday_short_forecast4}} wsfHLDR   <br>
+                Thursday   {{thursday_temp4}}wtHLDR&deg  {{thursday_wind4}}wwHLDR  {{thursday_short_forecast4}} wsfHLDR   <br>
+                Friday   {{friday_temp4}}wtHLDR&deg  {{friday_wind4}}wwHLDR  {{friday_short_forecast4}} wsfHLDR   <br>
+                Saturday   {{saturday_temp4}}wtHLDR&deg  {{saturday_wind4}}wwHLDR  {{saturday_short_forecast4}} wsfHLDR   <br>
+                </span>
+              </div>
+              <div class="col" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Location 5 <span style="float:right;">Current Temp: {{current_temp5}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp5}}wtHLDR&deg  {{sunday_wind5}}wwHLDR  {{sunday_short_forecast5}} wsfHLDR   <br>
+                Monday   {{monday_temp5}}wtHLDR&deg  {{monday_wind5}}wwHLDR  {{monday_short_forecast5}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp5}}wtHLDR&deg  {{tuesday_wind5}}wwHLDR  {{tuesday_short_forecast5}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp5}}wtHLDR&deg  {{wednesday_wind5}}wwHLDR  {{wednesday_short_forecast5}} wsfHLDR   <br>
+                Thursday   {{thursday_temp5}}wtHLDR&deg  {{thursday_wind5}}wwHLDR  {{thursday_short_forecast5}} wsfHLDR   <br>
+                Friday   {{friday_temp5}}wtHLDR&deg  {{friday_wind5}}wwHLDR  {{friday_short_forecast5}} wsfHLDR   <br>
+                Saturday   {{saturday_temp5}}wtHLDR&deg  {{saturday_wind5}}wwHLDR  {{saturday_short_forecast5}} wsfHLDR   <br>
+                </span>
+              </div>
+              <div class="col" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
+                Location 6 <span style="float:right;">Current Temp: {{current_temp6}}&deg</span> <br>
+                <span style="font-size:20px; word-spacing: 87px;">
+                Day    Temp  Wind   Forecast    <br>
+                </span>
+                <span style="font-size:20px; word-spacing: 65px;">
+                Sunday  {{sunday_temp6}}wtHLDR&deg  {{sunday_wind6}}wwHLDR  {{sunday_short_forecast6}} wsfHLDR   <br>
+                Monday   {{monday_temp6}}wtHLDR&deg  {{monday_wind6}}wwHLDR  {{monday_short_forecast6}} wsfHLDR   <br>
+                Tuesday   {{tuesday_temp6}}wtHLDR&deg  {{tuesday_wind6}}wwHLDR  {{tuesday_short_forecast6}} wsfHLDR   <br>
+                Wednesday   {{wednesday_temp6}}wtHLDR&deg  {{wednesday_wind6}}wwHLDR  {{wednesday_short_forecast6}} wsfHLDR   <br>
+                Thursday   {{thursday_temp6}}wtHLDR&deg  {{thursday_wind6}}wwHLDR  {{thursday_short_forecast6}} wsfHLDR   <br>
+                Friday   {{friday_temp6}}wtHLDR&deg  {{friday_wind6}}wwHLDR  {{friday_short_forecast6}} wsfHLDR   <br>
+                Saturday   {{saturday_temp6}}wtHLDR&deg  {{saturday_wind6}}wwHLDR  {{saturday_short_forecast6}} wsfHLDR   <br>
+                </span>
+              </div>
+            </div>
+          </div>
+    </body>
+</html>
