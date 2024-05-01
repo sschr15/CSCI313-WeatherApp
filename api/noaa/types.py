@@ -71,8 +71,6 @@ NotableAttributesType = Literal[
     'tornadoes',  # as if one tornado wasn't enough
 ]
 
-<<<<<<< HEAD
-=======
 MetarIntensityType = Literal[
     'light',
     'heavy',
@@ -121,7 +119,6 @@ WindDirectionType = Literal[
     'W', 'WNW', 'NW', 'NNW',
 ]
 
->>>>>>> sschr15
 
 class VtecFixedIdentifier(Enum):
     Operational = "O"
@@ -349,8 +346,6 @@ class Conditions:
 
     hazards: list[Hazard]
     """The current weather hazards."""
-<<<<<<< HEAD
-=======
 
 
 @dataclass
@@ -524,4 +519,3 @@ class Forecast:
 
     def __iter__(self):
         return iter(self.periods)
->>>>>>> sschr15

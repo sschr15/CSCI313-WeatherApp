@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-from .api_calls import current_data
-=======
 from __future__ import annotations
+from .api_calls import current_data
 from base64 import b64encode
 from json import dumps
 from urllib.parse import quote as encode_url
@@ -98,4 +96,3 @@ class NoaaData:
 
 
 __all__ = ['NoaaData']
->>>>>>> sschr15

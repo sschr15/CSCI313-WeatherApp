@@ -1,12 +1,20 @@
 from django.shortcuts import render
-from api.noaa.api_calls import *
+from api.noaa import NoaaData
 from django.http import HttpResponse
 from api.noaa import *
 
 
+
 def index(request):
+    fargo = NoaaData.at_location(46.8772, -96.7898)
+    new_york = NoaaData.at_location(40.7128, -74.0060)
+    hawaii = NoaaData.at_location(19.8987, -155.6659)
+    minnesota = NoaaData.at_location(46.7296, -94.6859)
+    wahpeton = NoaaData.at_location(46.2652, -96.6059)
+    jamestown = NoaaData.at_location(46.9105, -98.7084)
+
     context = {
-        'current_temp1' : round(((current_data(46.8772, -96.7898).temperature)*9/5)+32),
+        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
         #'hour_11' : (hourly method here.time),
         #'hour_21' : (hourly method here.time),
         #'hour_31' : (hourly method here.time),
@@ -36,7 +44,7 @@ def index(request):
         #'hourly_short_forecast_61' : not 100% sure how this will be formatted, i assume string,
         #'hourly_short_forecast_71' : not 100% sure how this will be formatted, i assume string,
         #2nd set
-        'current_temp2' : round(((current_data(40.7128, -74.0060).temperature)*9/5)+32),
+        'current_temp2' : round(((new_york.current_conditions().temperature)*9/5)+32),
         #'hour_12' : (hourly method here.time),
         #'hour_22' : (hourly method here.time),
         #'hour_32' : (hourly method here.time),
@@ -66,7 +74,7 @@ def index(request):
         #'hourly_short_forecast_62' : not 100% sure how this will be formatted, i assume string,
         #'hourly_short_forecast_72' : not 100% sure how this will be formatted, i assume string,
         #3rd set
-        'current_temp3' : round(((current_data(19.8987, -155.6659).temperature)*9/5)+32),
+        'current_temp3' : round(((hawaii.current_conditions().temperature)*9/5)+32),
         #'hour_13' : (hourly method here.time),
         #'hour_23' : (hourly method here.time),
         #'hour_33' : (hourly method here.time),
@@ -96,7 +104,7 @@ def index(request):
         #'hourly_short_forecast_63' : not 100% sure how this will be formatted, i assume string,
         #'hourly_short_forecast_73' : not 100% sure how this will be formatted, i assume string,
         #4th set
-        'current_temp4' : round(((current_data(46.7296, -94.6859).temperature)*9/5)+32),
+        'current_temp4' : round(((minnesota.current_conditions().temperature)*9/5)+32),
         #'hour_14' : (hourly method here.time),
         #'hour_24' : (hourly method here.time),
         #'hour_34' : (hourly method here.time),
@@ -126,7 +134,7 @@ def index(request):
         #'hourly_short_forecast_64' : not 100% sure how this will be formatted, i assume string,
         #'hourly_short_forecast_74' : not 100% sure how this will be formatted, i assume string,
         #5th set
-        'current_temp5' : round(((current_data(46.2652, -96.6059).temperature)*9/5)+32),
+        'current_temp5' : round(((wahpeton.current_conditions().temperature)*9/5)+32),
         #'hour_15' : (hourly method here.time),
         #'hour_25' : (hourly method here.time),
         #'hour_35' : (hourly method here.time),
@@ -156,7 +164,7 @@ def index(request):
         #'hourly_short_forecast_65' : not 100% sure how this will be formatted, i assume string,
         #'hourly_short_forecast_75' : not 100% sure how this will be formatted, i assume string,
         #6th set
-        'current_temp6' : round(((current_data(46.9105, -98.7084).temperature)*9/5)+32),
+        'current_temp6' : round(((jamestown.current_conditions().temperature)*9/5)+32),
         #'hour_16' : (hourly method here.time),
         #'hour_26' : (hourly method here.time),
         #'hour_36' : (hourly method here.time),
@@ -190,7 +198,7 @@ def index(request):
 
 def weekly_view(request):
     context = {
-        'current_temp1' : round(((current_data(46.8772, -96.7898).temperature)*9/5)+32),
+        #'current_temp1' : round(((current_data(46.8772, -96.7898).temperature)*9/5)+32),
         #'sunday_temp1' : round(weekly method).temperatureSunday, 2),
         #'monday_temp1' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp1' : round(weekly method).temperatureTuesday, 2),
@@ -213,7 +221,7 @@ def weekly_view(request):
         #'friday_short_forecast1' : not 100% sure how this will be formatted, i assume string,
         #'saturday_short_forecast1' : not 100% sure how this will be formatted, i assume string,
         #2nd set
-        'current_temp2' : round(((current_data(40.7128, -74.0060).temperature)*9/5)+32),
+        #'current_temp2' : round(((current_data(40.7128, -74.0060).temperature)*9/5)+32),
         #'sunday_temp2' : round(weekly method).temperatureSunday, 2),
         #'monday_temp2' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp2' : round(weekly method).temperatureTuesday, 2),
@@ -236,7 +244,7 @@ def weekly_view(request):
         #'friday_short_forecast2' : not 100% sure how this will be formatted, i assume string,
         #'saturday_short_forecast2' : not 100% sure how this will be formatted, i assume string,
         #3rd set
-        'current_temp3' : round(((current_data(19.8987, -155.6659).temperature)*9/5)+32),
+        #'current_temp3' : round(((current_data(19.8987, -155.6659).temperature)*9/5)+32),
         #'sunday_temp3' : round(weekly method).temperatureSunday, 2),
         #'monday_temp3' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp3' : round(weekly method).temperatureTuesday, 2),
@@ -259,7 +267,7 @@ def weekly_view(request):
         #'friday_short_forecast3' : not 100% sure how this will be formatted, i assume string,
         #'saturday_short_forecast3' : not 100% sure how this will be formatted, i assume string,
         #4th set
-        'current_temp4' : round(((current_data(46.7296, -94.6859).temperature)*9/5)+32),
+        #'current_temp4' : round(((current_data(46.7296, -94.6859).temperature)*9/5)+32),
         #'sunday_temp4' : round(weekly method).temperatureSunday, 2),
         #'monday_temp4' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp4' : round(weekly method).temperatureTuesday, 2),
@@ -282,7 +290,7 @@ def weekly_view(request):
         #'friday_short_forecast4' : not 100% sure how this will be formatted, i assume string,
         #'saturday_short_forecast4' : not 100% sure how this will be formatted, i assume string,
         #5th set
-        'current_temp5' : round(((current_data(46.2652, -96.6059).temperature)*9/5)+32),
+        #'current_temp5' : round(((current_data(46.2652, -96.6059).temperature)*9/5)+32),
         #'sunday_temp5' : round(weekly method).temperatureSunday, 2),
         #'monday_temp5' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp5' : round(weekly method).temperatureTuesday, 2),
@@ -305,7 +313,7 @@ def weekly_view(request):
         #'friday_short_forecast5' : not 100% sure how this will be formatted, i assume string,
         #'saturday_short_forecast5' : not 100% sure how this will be formatted, i assume string,
         #6th set
-        'current_temp6' : round(((current_data(46.9105, -98.7084).temperature)*9/5)+32),
+        #'current_temp6' : round(((current_data(46.9105, -98.7084).temperature)*9/5)+32),
         #'sunday_temp6' : round(weekly method).temperatureSunday, 2),
         #'monday_temp6' : round(weekly method).temperatureMonday, 2),
         #'tuesday_temp6' : round(weekly method).temperatureTuesday, 2),
