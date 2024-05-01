@@ -71,6 +71,57 @@ NotableAttributesType = Literal[
     'tornadoes',  # as if one tornado wasn't enough
 ]
 
+<<<<<<< HEAD
+=======
+MetarIntensityType = Literal[
+    'light',
+    'heavy',
+]
+
+MetarModifierType = Literal[
+    'patches',
+    'blowing',
+    'low_drifting',
+    'freezing',
+    'shallow',
+    'partial',
+    'showers',
+]
+
+MetarWeatherType = Literal[
+    'fog_mist',
+    'dust_storm',
+    'dust',
+    'drizzle',
+    'funnel_cloud',  # mmm, funnel cake
+    'fog',
+    'smoke',
+    'hail',
+    'snow_pellets',
+    'haze',
+    'ice_crystals',
+    'ice_pellets',
+    'dust_whirls',
+    'spray',
+    'rain',
+    'sand',
+    'snow_grains',
+    'snow',
+    'squalls',
+    'sand_storm',
+    'thunderstorms',
+    'unknown',
+    'volcanic_ash',
+]
+
+WindDirectionType = Literal[
+    'N', 'NNE', 'NE', 'ENE',
+    'E', 'ESE', 'SE', 'SSE',
+    'S', 'SSW', 'SW', 'WSW',
+    'W', 'WNW', 'NW', 'NNW',
+]
+
+>>>>>>> sschr15
 
 class VtecFixedIdentifier(Enum):
     Operational = "O"
@@ -298,3 +349,179 @@ class Conditions:
 
     hazards: list[Hazard]
     """The current weather hazards."""
+<<<<<<< HEAD
+=======
+
+
+@dataclass
+class MetarPhenomenon:  # yes this is the name NOAA uses
+    """A representation of a decoded METAR phenomenon string."""
+
+    intensity: MetarIntensityType | None
+    """The intensity of the phenomenon, if applicable."""
+
+    modifier: MetarModifierType | None
+    """The modifier of the phenomenon, if applicable."""
+
+    weather: MetarWeatherType
+    """The type of weather phenomenon."""
+
+    rawString: str
+    """The raw METAR string for the phenomenon."""
+
+
+@dataclass
+class CurrentObservation:
+    """A snippet of the current weather observation."""
+
+    timestamp: datetime
+    """The timestamp of the observation."""
+
+    textDescription: str
+    """A short text description of the weather."""
+
+    icon: str  # deprecated by NOAA, but I care not one bit
+    """A URL to an icon representing the weather."""
+
+    presentWeather: list[MetarPhenomenon]
+    """The current weather conditions."""
+
+    temperature: float
+    """The temperature in degrees Celsius."""
+
+    dewpoint: float
+    """The dew point in degrees Celsius."""
+
+    windDirection: int
+    """The wind direction (direction it's coming from), in degrees."""
+
+    windSpeed: float
+    """The wind speed in kilometers per hour."""
+
+    windGust: float | None
+    """The wind gust speed in kilometers per hour, or None if not present in the data."""
+
+    barometricPressure: float
+    """The barometric pressure in pascals."""
+
+    seaLevelPressure: float
+    """The pressure if measured at sea level in pascals."""
+
+    visibility: float
+    """The visibility in kilometers."""
+
+    maxTemperatureLast24Hours: float | None
+    """The maximum temperature in the last 24 hours, or None if not present in the data."""
+
+    minTemperatureLast24Hours: float | None
+    """The minimum temperature in the last 24 hours, or None if not present in the data."""
+
+    precipitationLastHour: float
+    """The precipitation in the last hour in millimeters."""
+
+    precipitationLast3Hours: float | None
+    """The precipitation in the last 3 hours in millimeters, or None if not present in the data."""
+
+    precipitationLast6Hours: float | None
+    """The precipitation in the last 6 hours in millimeters, or None if not present in the data."""
+
+    relativeHumidity: float
+    """The relative humidity, in percent (scaled to 0-100, not rounded)."""
+
+    windChill: float | None
+    """The wind chill (cold feels-like), or None if not present in the data."""
+
+    heatIndex: float | None
+    """The heat index (hot feels-like), or None if not present in the data."""
+
+
+@dataclass
+class ForecastPeriod:
+    """A period of weather forecast data."""
+
+    number: int
+
+    name: str
+    """A name for the forecast period. May be empty."""
+
+    startTime: datetime
+    """The start time of the forecast period."""
+
+    endTime: datetime
+    """The end time of the forecast period."""
+
+    isDaytime: bool
+    """Whether the forecast period is during the day."""
+
+    temperature: int
+    """The temperature in the unit specified by temperatureUnit."""
+
+    temperatureUnit: Literal["F", "C"]
+    """The unit of the temperature. Either degrees Fahrenheit or Celsius."""
+
+    temperatureTrend: Literal["falling", "rising"] | None
+    """The trend of the temperature."""
+
+    precipProbability: int
+    """The probability of precipitation, in percent (scaled to 0-100)."""
+
+    dewpoint: float
+    """The dew point in degrees Celsius."""
+
+    relativeHumidity: int
+    """The relative humidity, in percent (scaled to 0-100)."""
+
+    windSpeed: str
+    """A string representation of the wind speed."""
+
+    windDirection: WindDirectionType
+    """A string representation of the wind direction."""
+
+    icon: str  # again deprecated by NOAA, but their own API completely ignores feature flags...
+    """A URL to an icon representing the weather."""
+
+    shortForecast: str
+    """A brief description of the weather."""
+
+    detailedForecast: str
+    """A detailed description of the weather. May be empty if none is provided."""
+
+
+class ForecastGeneration(Enum):
+    WeekForecast = "BaselineForecastGenerator"
+    HourForecast = "HourlyForecastGenerator"
+
+
+@dataclass
+class Forecast:
+    """A weather forecast."""
+
+    units: Literal["us", "si"]
+    """The units used in the forecast. Either US or metric (denoted as SI)."""
+
+    generation: ForecastGeneration
+    """The type of forecast generator used.
+    This identifies whether this forecast details extended periods or hourly data.
+    """
+
+    generatedAt: datetime
+    """The time the forecast was generated."""
+
+    updateTime: datetime
+    """The time the forecast was last updated."""
+
+    validPeriodStart: datetime
+    """The start of the forecast period."""
+
+    validPeriodEnd: datetime
+    """The end of the forecast period."""
+
+    periods: list[ForecastPeriod]
+    """The forecast periods."""
+
+    def __getitem__(self, item: int) -> ForecastPeriod:
+        return self.periods[item]
+
+    def __iter__(self):
+        return iter(self.periods)
+>>>>>>> sschr15
