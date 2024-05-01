@@ -1,4 +1,3 @@
-from .utils import parse_iso_interval
 from .types import *
 
 

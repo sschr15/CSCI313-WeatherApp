@@ -126,6 +126,8 @@ MetarPhenomenon = TypedDict('MetarPhenomenon', {
     'rawString': str,
 })
 
+AlertReference = dict[Literal['identifier', 'sender', 'sent'], str]
+
 
 @dataclass
 class TimePeriod:
@@ -517,3 +519,152 @@ class Forecast:
 
     def __iter__(self):
         return iter(self.periods)
+
+
+class AlertStatus(Enum):
+    Actual = "Actual"
+    Exercise = "Exercise"
+    System = "System"
+    Test = "Test"
+    Draft = "Draft"
+
+
+class AlertMessageType(Enum):
+    Alert = "Alert"
+    Update = "Update"
+    Cancel = "Cancel"
+    Acknowledge = "Ack"
+    Error = "Error"
+
+
+class AlertCategory(Enum):
+    Met = "Met"
+    Geo = "Geo"
+    Safety = "Safety"
+    Security = "Security"
+    Rescue = "Rescue"
+    Fire = "Fire"
+    Health = "Health"
+    Env = "Env"
+    Transport = "Transport"
+    Infra = "Infra"
+    CBRNE = "CBRNE"
+    Other = "Other"
+
+
+class AlertSeverity(Enum):
+    Extreme = "Extreme"
+    Severe = "Severe"
+    Moderate = "Moderate"
+    Minor = "Minor"
+    Unknown = "Unknown"
+
+
+class AlertCertainty(Enum):
+    Observed = "Observed"
+    Likely = "Likely"
+    Possible = "Possible"
+    Unlikely = "Unlikely"
+    Unknown = "Unknown"
+
+
+class AlertUrgency(Enum):
+    Immediate = "Immediate"
+    Expected = "Expected"
+    Future = "Future"
+    Past = "Past"
+    Unknown = "Unknown"
+
+
+class AlertResponse(Enum):
+    Shelter = "Shelter"
+    Evacuate = "Evacuate"
+    Prepare = "Prepare"
+    Execute = "Execute"
+    Avoid = "Avoid"
+    Monitor = "Monitor"
+    Assess = "Assess"
+    AllClear = "AllClear"
+    None_ = "None"
+
+
+@noaa_data
+class Alert:
+    """A public NOAA alert."""
+
+    id: str
+    """A unique identifier for the alert."""
+
+    areaDesc: str
+    """A short text description of the area affected by the alert."""
+
+    geocode: dict[Literal['UGC', 'SAME'], list[str]]
+    """The geographic SAME and UGC codes for the area affected by the alert."""
+
+    references: list[AlertReference]
+    """A list of references to other alerts."""
+
+    sent: datetime
+    """The time the alert was issued."""
+
+    effective: datetime
+    """The time the alert becomes effective."""
+
+    onset: datetime
+    """The expected beginning time of the event's subject matter."""
+
+    expires: datetime
+    """The time the alert expires."""
+
+    ends: datetime
+    """The expected end time of the event's subject matter."""
+
+    status: AlertStatus
+    """A general grouping of the alert."""
+
+    messageType: AlertMessageType
+    """The type of alert message."""
+
+    category: AlertCategory
+    """The category of the alert's subject matter."""
+
+    severity: AlertSeverity
+    """The severity of the event."""
+
+    certainty: AlertCertainty
+    """The certainty of the event."""
+
+    urgency: AlertUrgency
+    """The urgency of the event."""
+
+    event: str
+    """A short textual description of the type of event."""
+
+    sender: str
+    """The email address of the responsible NWS webmaster."""
+
+    senderName: str
+    """The name of the organization issuing the alert."""
+
+    headline: str
+    """A brief human-readable headline."""
+
+    description: str
+    """A detailed description of the alert. This contains line breaks."""
+
+    instruction: str
+    """Instructions for the alert."""
+
+    response: AlertResponse
+    """Recommended action to be taken in response to the alert."""
+
+    parameters: dict[str, list[str]]
+    """Additional parameters for the alert.
+    This can contain any number of key-value pairs.
+    The information on this can be found in the NWS CAP specification.
+    """
+
+    def get_referenced_alerts(self) -> list['Alert']:
+        """Get a list of alerts referenced by this alert."""
+        from . import get_alert
+        return [get_alert(ref['identifier']) for ref in self.references]

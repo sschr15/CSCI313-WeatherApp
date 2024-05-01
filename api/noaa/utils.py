@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from enum import Enum
 from typing import Type, TypeVar, Any
 import inspect
 import re
@@ -77,17 +78,24 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
         quantifiables: set[str] = set()
         datetimes: set[str] = set()
         time_ranges: set[str] = set()
+        enums: dict[str, Type] = {}
         for field_name, type_ in annotations.items():
             if isinstance(type_, str):
                 type_ = eval(type_)
+
             fields[field_name] = type_
-            if type_ is _Quantifiable or type(type_) is _Quantifiable:
+
+            type_obj = type_ if type(type_) is type else type_
+
+            if type_obj is _Quantifiable:
                 fields[field_name] = type_.type
                 quantifiables.add(field_name)
-            elif type_ is datetime or type(type_) is datetime:
+            elif type_obj is datetime:
                 datetimes.add(field_name)
-            elif type_ is TimePeriod or type(type_) is TimePeriod:
+            elif type_obj is TimePeriod:
                 time_ranges.add(field_name)
+            elif issubclass(type(type_obj), Enum):
+                enums[field_name] = type_obj
 
         setattr(cls, '_noaa_fields', fields)
 
@@ -107,6 +115,8 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
                     value = datetime.fromisoformat(data[field])
                 elif field in time_ranges:
                     value = parse_iso_interval(data[field])
+                elif field in enums:
+                    value = enums[field](data[field])
                 elif field in ignored:
                     continue
                 else:
