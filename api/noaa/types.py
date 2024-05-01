@@ -1,9 +1,9 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Literal
+from typing import Literal, TypedDict
+
+from .utils import noaa_data, NoaaQuantifiable
 
 CoverageType = Literal[
     None,
@@ -118,6 +118,21 @@ WindDirectionType = Literal[
     'S', 'SSW', 'SW', 'WSW',
     'W', 'WNW', 'NW', 'NNW',
 ]
+
+MetarPhenomenon = TypedDict('MetarPhenomenon', {
+    'intensity': MetarIntensityType | None,
+    'modifier': MetarModifierType | None,
+    'weather': MetarWeatherType,
+    'rawString': str,
+})
+
+AlertReference = dict[Literal['identifier', 'sender', 'sent'], str]
+
+
+@dataclass
+class TimePeriod:
+    start: datetime
+    end: datetime
 
 
 class VtecFixedIdentifier(Enum):
@@ -250,7 +265,7 @@ class VtecCode:
     endTime: datetime
 
     @classmethod
-    def from_string(cls, code: str) -> VtecCode:
+    def from_string(cls, code: str) -> 'VtecCode':
         """Create a VTEC code from a string."""
         if not code:
             raise ValueError("VTEC code cannot be empty")
@@ -348,24 +363,7 @@ class Conditions:
     """The current weather hazards."""
 
 
-@dataclass
-class MetarPhenomenon:  # yes this is the name NOAA uses
-    """A representation of a decoded METAR phenomenon string."""
-
-    intensity: MetarIntensityType | None
-    """The intensity of the phenomenon, if applicable."""
-
-    modifier: MetarModifierType | None
-    """The modifier of the phenomenon, if applicable."""
-
-    weather: MetarWeatherType
-    """The type of weather phenomenon."""
-
-    rawString: str
-    """The raw METAR string for the phenomenon."""
-
-
-@dataclass
+@noaa_data
 class CurrentObservation:
     """A snippet of the current weather observation."""
 
@@ -381,56 +379,56 @@ class CurrentObservation:
     presentWeather: list[MetarPhenomenon]
     """The current weather conditions."""
 
-    temperature: float
+    temperature: NoaaQuantifiable[float]
     """The temperature in degrees Celsius."""
 
-    dewpoint: float
+    dewpoint: NoaaQuantifiable[float]
     """The dew point in degrees Celsius."""
 
-    windDirection: int
+    windDirection: NoaaQuantifiable[int]
     """The wind direction (direction it's coming from), in degrees."""
 
-    windSpeed: float
+    windSpeed: NoaaQuantifiable[float]
     """The wind speed in kilometers per hour."""
 
-    windGust: float | None
+    windGust: NoaaQuantifiable[float | None]
     """The wind gust speed in kilometers per hour, or None if not present in the data."""
 
-    barometricPressure: float
+    barometricPressure: NoaaQuantifiable[float]
     """The barometric pressure in pascals."""
 
-    seaLevelPressure: float
+    seaLevelPressure: NoaaQuantifiable[float]
     """The pressure if measured at sea level in pascals."""
 
-    visibility: float
+    visibility: NoaaQuantifiable[float]
     """The visibility in kilometers."""
 
-    maxTemperatureLast24Hours: float | None
+    maxTemperatureLast24Hours: NoaaQuantifiable[float | None]
     """The maximum temperature in the last 24 hours, or None if not present in the data."""
 
-    minTemperatureLast24Hours: float | None
+    minTemperatureLast24Hours: NoaaQuantifiable[float | None]
     """The minimum temperature in the last 24 hours, or None if not present in the data."""
 
-    precipitationLastHour: float
+    precipitationLastHour: NoaaQuantifiable[float]
     """The precipitation in the last hour in millimeters."""
 
-    precipitationLast3Hours: float | None
+    precipitationLast3Hours: NoaaQuantifiable[float | None]
     """The precipitation in the last 3 hours in millimeters, or None if not present in the data."""
 
-    precipitationLast6Hours: float | None
+    precipitationLast6Hours: NoaaQuantifiable[float | None]
     """The precipitation in the last 6 hours in millimeters, or None if not present in the data."""
 
-    relativeHumidity: float
+    relativeHumidity: NoaaQuantifiable[float]
     """The relative humidity, in percent (scaled to 0-100, not rounded)."""
 
-    windChill: float | None
+    windChill: NoaaQuantifiable[float | None]
     """The wind chill (cold feels-like), or None if not present in the data."""
 
-    heatIndex: float | None
+    heatIndex: NoaaQuantifiable[float | None]
     """The heat index (hot feels-like), or None if not present in the data."""
 
 
-@dataclass
+@noaa_data
 class ForecastPeriod:
     """A period of weather forecast data."""
 
@@ -457,13 +455,13 @@ class ForecastPeriod:
     temperatureTrend: Literal["falling", "rising"] | None
     """The trend of the temperature."""
 
-    precipProbability: int
+    probabilityOfPrecipitation: NoaaQuantifiable[int]
     """The probability of precipitation, in percent (scaled to 0-100)."""
 
-    dewpoint: float
+    dewpoint: NoaaQuantifiable[float]
     """The dew point in degrees Celsius."""
 
-    relativeHumidity: int
+    relativeHumidity: NoaaQuantifiable[float]
     """The relative humidity, in percent (scaled to 0-100)."""
 
     windSpeed: str
@@ -487,7 +485,7 @@ class ForecastGeneration(Enum):
     HourForecast = "HourlyForecastGenerator"
 
 
-@dataclass
+@noaa_data(ignored_fields=['generation', 'periods'])
 class Forecast:
     """A weather forecast."""
 
@@ -505,17 +503,168 @@ class Forecast:
     updateTime: datetime
     """The time the forecast was last updated."""
 
-    validPeriodStart: datetime
-    """The start of the forecast period."""
-
-    validPeriodEnd: datetime
-    """The end of the forecast period."""
+    validTimes: TimePeriod
+    """The time period the forecast is valid for."""
 
     periods: list[ForecastPeriod]
     """The forecast periods."""
+
+    def _post_init(self, data: dict):
+        # Init stuff that isn't initialized by the decorator
+        self.generation = ForecastGeneration(data['forecastGenerator'])
+        self.periods = [ForecastPeriod(**period) for period in data['periods']]
 
     def __getitem__(self, item: int) -> ForecastPeriod:
         return self.periods[item]
 
     def __iter__(self):
         return iter(self.periods)
+
+
+class AlertStatus(Enum):
+    Actual = "Actual"
+    Exercise = "Exercise"
+    System = "System"
+    Test = "Test"
+    Draft = "Draft"
+
+
+class AlertMessageType(Enum):
+    Alert = "Alert"
+    Update = "Update"
+    Cancel = "Cancel"
+    Acknowledge = "Ack"
+    Error = "Error"
+
+
+class AlertCategory(Enum):
+    Met = "Met"
+    Geo = "Geo"
+    Safety = "Safety"
+    Security = "Security"
+    Rescue = "Rescue"
+    Fire = "Fire"
+    Health = "Health"
+    Env = "Env"
+    Transport = "Transport"
+    Infra = "Infra"
+    CBRNE = "CBRNE"
+    Other = "Other"
+
+
+class AlertSeverity(Enum):
+    Extreme = "Extreme"
+    Severe = "Severe"
+    Moderate = "Moderate"
+    Minor = "Minor"
+    Unknown = "Unknown"
+
+
+class AlertCertainty(Enum):
+    Observed = "Observed"
+    Likely = "Likely"
+    Possible = "Possible"
+    Unlikely = "Unlikely"
+    Unknown = "Unknown"
+
+
+class AlertUrgency(Enum):
+    Immediate = "Immediate"
+    Expected = "Expected"
+    Future = "Future"
+    Past = "Past"
+    Unknown = "Unknown"
+
+
+class AlertResponse(Enum):
+    Shelter = "Shelter"
+    Evacuate = "Evacuate"
+    Prepare = "Prepare"
+    Execute = "Execute"
+    Avoid = "Avoid"
+    Monitor = "Monitor"
+    Assess = "Assess"
+    AllClear = "AllClear"
+    None_ = "None"
+
+
+@noaa_data
+class Alert:
+    """A public NOAA alert."""
+
+    id: str
+    """A unique identifier for the alert."""
+
+    areaDesc: str
+    """A short text description of the area affected by the alert."""
+
+    geocode: dict[Literal['UGC', 'SAME'], list[str]]
+    """The geographic SAME and UGC codes for the area affected by the alert."""
+
+    references: list[AlertReference]
+    """A list of references to other alerts."""
+
+    sent: datetime
+    """The time the alert was issued."""
+
+    effective: datetime
+    """The time the alert becomes effective."""
+
+    onset: datetime
+    """The expected beginning time of the event's subject matter."""
+
+    expires: datetime
+    """The time the alert expires."""
+
+    ends: datetime
+    """The expected end time of the event's subject matter."""
+
+    status: AlertStatus
+    """A general grouping of the alert."""
+
+    messageType: AlertMessageType
+    """The type of alert message."""
+
+    category: AlertCategory
+    """The category of the alert's subject matter."""
+
+    severity: AlertSeverity
+    """The severity of the event."""
+
+    certainty: AlertCertainty
+    """The certainty of the event."""
+
+    urgency: AlertUrgency
+    """The urgency of the event."""
+
+    event: str
+    """A short textual description of the type of event."""
+
+    sender: str
+    """The email address of the responsible NWS webmaster."""
+
+    senderName: str
+    """The name of the organization issuing the alert."""
+
+    headline: str
+    """A brief human-readable headline."""
+
+    description: str
+    """A detailed description of the alert. This contains line breaks."""
+
+    instruction: str
+    """Instructions for the alert."""
+
+    response: AlertResponse
+    """Recommended action to be taken in response to the alert."""
+
+    parameters: dict[str, list[str]]
+    """Additional parameters for the alert.
+    This can contain any number of key-value pairs.
+    The information on this can be found in the NWS CAP specification.
+    """
+
+    def get_referenced_alerts(self) -> list['Alert']:
+        """Get a list of alerts referenced by this alert."""
+        from . import get_alert
+        return [get_alert(ref['identifier']) for ref in self.references]

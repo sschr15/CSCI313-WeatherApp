@@ -1,6 +1,6 @@
 from __future__ import annotations
-from typing import Literal, overload
-from .types import CurrentObservation, Forecast
+from typing import Literal, overload, ClassVar
+from .types import CurrentObservation, Forecast, Alert
 
 
 class NoaaData:
@@ -30,6 +30,12 @@ class NoaaData:
         """Get the forecast for the next 24 hours.
         Each entry in the forecast represents a 1-hour period. The periods omit
         name and detailed information.
+        """
+        ...
+
+    def alerts(self) -> list[Alert]:
+        """Get any weather alerts for the location.
+        This will return a list of alerts, each with a headline, description, and related data.
         """
         ...
 
@@ -63,14 +69,16 @@ class NoaaData:
         """Get a URL for the closest radar station."""
         ...
 
-    @staticmethod
-    def __request(url: str) -> dict:
-        ...
-
     def __init__(self, data, lat, lon):
         """Do not call this directly. Use the at_location class method instead."""
         self.__data: dict[Literal['forecast', 'forecastHourly', 'observationStations', 'radarStation'], str] = data
         self.__lat: float = lat
         self.__lon: float = lon
 
-    __radar_url: str
+    __radar_url: ClassVar[str]
+    __alerts_url: ClassVar[str]
+
+
+def get_alert(alert_id: str) -> Alert:
+    """Get a specific alert by its ID."""
+    ...
