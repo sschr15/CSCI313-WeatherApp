@@ -3,9 +3,6 @@ from api.noaa import NoaaData
 from django.http import HttpResponse
 from api.noaa import *
 import datetime
-from PIL import Image
-from urllib.request import urlopen
-from io import BytesIO
 
 
 
@@ -586,7 +583,6 @@ def city_view_hourly(request):
     fargoHourlyWindD = {}
     fargoHourlyDewPoint = {}
     fargoHourlyHumidity = {}
-    #img = Image.open(BytesIO(urlopen(radar).read()))
 
     x=0
     for hour in hourlyFargo:    
@@ -602,8 +598,9 @@ def city_view_hourly(request):
         x += 1
     
     context = {
-       #'radar' : img,
+        'radar' : radar,
         'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
+       #'hazards' : fargo.current_conditions().
         'hour_11' : fargoHourlyTime[1],
         'hour_21' : fargoHourlyTime[2],
         'hour_31' : fargoHourlyTime[3],
@@ -646,22 +643,99 @@ def city_view_hourly(request):
         'hourly_rh_51' : round(fargoHourlyHumidity[5], 2),
         'hourly_rh_61' : round(fargoHourlyHumidity[6], 2),
         'hourly_rh_71' : round(fargoHourlyHumidity[7], 2),
-        'hourly_short_forecast_11' : fargoHourlyShortForecast[1],
-        'hourly_short_forecast_21' : fargoHourlyShortForecast[2],
-        'hourly_short_forecast_31' : fargoHourlyShortForecast[3],
-        'hourly_short_forecast_41' : fargoHourlyShortForecast[4],
-        'hourly_short_forecast_51' : fargoHourlyShortForecast[5],
-        'hourly_short_forecast_61' : fargoHourlyShortForecast[6],
-        'hourly_short_forecast_71' : fargoHourlyShortForecast[7],
+        'hourly_short_forecast_11' : fargoHourlyShortForecast[1].replace(" ", "-"),
+        'hourly_short_forecast_21' : fargoHourlyShortForecast[2].replace(" ", "-"),
+        'hourly_short_forecast_31' : fargoHourlyShortForecast[3].replace(" ", "-"),
+        'hourly_short_forecast_41' : fargoHourlyShortForecast[4].replace(" ", "-"),
+        'hourly_short_forecast_51' : fargoHourlyShortForecast[5].replace(" ", "-"),
+        'hourly_short_forecast_61' : fargoHourlyShortForecast[6].replace(" ", "-"),
+        'hourly_short_forecast_71' : fargoHourlyShortForecast[7].replace(" ", "-"),
 
     }
     return render(request, 'expanded_city_view_hourly.html', context)
 
 def city_view_weekly(request):
+    central_time = datetime.timezone(datetime.timedelta(hours=-6))
+    fargo = NoaaData.at_location(46.8772, -96.7898)
+    radar = fargo.radar_gif_url
+    weeklyFargo = fargo.week_forecast()
+    fargoWeeklyTemp = {}
+    fargoWeeklyTime = {}
+    fargoWeeklyWindS = {}
+    fargoWeeklyShortForecast = {}
+    fargoWeeklyWindD = {}
+    fargoWeeklyDewPoint = {}
+    fargoWeeklyHumidity = {}
+    fargoWeeklyDetailedForecast = {}
 
-
+    x=0
+    for week in weeklyFargo:    
+            time = week.startTime.astimezone(central_time).strftime('%m/%d')
+            fargoWeeklyTime[x] = time
+            fargoWeeklyTemp[x] = week.temperature
+            fargoWeeklyWindS[x] = week.windSpeed
+            fargoWeeklyWindD[x] = week.windDirection
+            fargoWeeklyShortForecast[x] = week.shortForecast
+            fargoWeeklyDewPoint[x] = week.dewpoint
+            fargoWeeklyHumidity[x] = week.relativeHumidity
+            fargoWeeklyDetailedForecast[x] = week.detailedForecast
+        
+            x += 1
+    
     context = {
-
+        'radar' : radar,
+        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
+       #'hazards' : fargo.current_conditions().
+        'weekly_11' : fargoWeeklyTime[1],
+        'weekly_21' : fargoWeeklyTime[2],
+        'weekly_31' : fargoWeeklyTime[3],
+        'weekly_41' : fargoWeeklyTime[4],
+        'weekly_51' : fargoWeeklyTime[5],
+        'weekly_61' : fargoWeeklyTime[6],
+        'weekly_71' : fargoWeeklyTime[7],
+        'weekly_temp_11' : fargoWeeklyTemp[1],
+        'weekly_temp_21' : fargoWeeklyTemp[2],
+        'weekly_temp_31' : fargoWeeklyTemp[3],
+        'weekly_temp_41' : fargoWeeklyTemp[4],
+        'weekly_temp_51' : fargoWeeklyTemp[5],
+        'weekly_temp_61' : fargoWeeklyTemp[6],
+        'weekly_temp_71' : fargoWeeklyTemp[7],
+        'weekly_wind_11' : fargoWeeklyWindS[1].replace(" ", "-"),
+        'weekly_wind_21' : fargoWeeklyWindS[2].replace(" ", "-"),
+        'weekly_wind_31' : fargoWeeklyWindS[3].replace(" ", "-"),
+        'weekly_wind_41' : fargoWeeklyWindS[4].replace(" ", "-"),
+        'weekly_wind_51' : fargoWeeklyWindS[5].replace(" ", "-"),
+        'weekly_wind_61' : fargoWeeklyWindS[6].replace(" ", "-"),
+        'weekly_wind_71' : fargoWeeklyWindS[7].replace(" ", "-"),
+        'weekly_windD_11' : fargoWeeklyWindD[1].replace(" ", "-"),
+        'weekly_windD_21' : fargoWeeklyWindD[2].replace(" ", "-"),
+        'weekly_windD_31' : fargoWeeklyWindD[3].replace(" ", "-"),
+        'weekly_windD_41' : fargoWeeklyWindD[4].replace(" ", "-"),
+        'weekly_windD_51' : fargoWeeklyWindD[5].replace(" ", "-"),
+        'weekly_windD_61' : fargoWeeklyWindD[6].replace(" ", "-"),
+        'weekly_windD_71' : fargoWeeklyWindD[7].replace(" ", "-"),
+        'weekly_dp_11' : round(fargoWeeklyDewPoint[1], 2),
+        'weekly_dp_21' : round(fargoWeeklyDewPoint[2], 2),
+        'weekly_dp_31' : round(fargoWeeklyDewPoint[3], 2),
+        'weekly_dp_41' : round(fargoWeeklyDewPoint[4], 2),
+        'weekly_dp_51' : round(fargoWeeklyDewPoint[5], 2),
+        'weekly_dp_61' : round(fargoWeeklyDewPoint[6], 2),
+        'weekly_dp_71' : round(fargoWeeklyDewPoint[7], 2),
+        'weekly_rh_11' : round(fargoWeeklyHumidity[1], 2),
+        'weekly_rh_21' : round(fargoWeeklyHumidity[2], 2),
+        'weekly_rh_31' : round(fargoWeeklyHumidity[3], 2),
+        'weekly_rh_41' : round(fargoWeeklyHumidity[4], 2),
+        'weekly_rh_51' : round(fargoWeeklyHumidity[5], 2),
+        'weekly_rh_61' : round(fargoWeeklyHumidity[6], 2),
+        'weekly_rh_71' : round(fargoWeeklyHumidity[7], 2),
+        'weekly_short_forecast_11' : fargoWeeklyShortForecast[1].replace(" ", "-"),
+        'weekly_short_forecast_21' : fargoWeeklyShortForecast[2].replace(" ", "-"),
+        'weekly_short_forecast_31' : fargoWeeklyShortForecast[3].replace(" ", "-"),
+        'weekly_short_forecast_41' : fargoWeeklyShortForecast[4].replace(" ", "-"),
+        'weekly_short_forecast_51' : fargoWeeklyShortForecast[5].replace(" ", "-"),
+        'weekly_short_forecast_61' : fargoWeeklyShortForecast[6].replace(" ", "-"),
+        'weekly_short_forecast_71' : fargoWeeklyShortForecast[7].replace(" ", "-"),
+        'weekly_detailed_forecast_11' : fargoWeeklyDetailedForecast[1],
     }
     return render(request, 'expanded_city_view_weekly.html', context)
 
