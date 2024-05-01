@@ -112,6 +112,13 @@ MetarWeatherType = Literal[
     'volcanic_ash',
 ]
 
+WindDirectionType = Literal[
+    'N', 'NNE', 'NE', 'ENE',
+    'E', 'ESE', 'SE', 'SSE',
+    'S', 'SSW', 'SW', 'WSW',
+    'W', 'WNW', 'NW', 'NNW',
+]
+
 
 class VtecFixedIdentifier(Enum):
     Operational = "O"
@@ -421,3 +428,94 @@ class CurrentObservation:
 
     heatIndex: float | None
     """The heat index (hot feels-like), or None if not present in the data."""
+
+
+@dataclass
+class ForecastPeriod:
+    """A period of weather forecast data."""
+
+    number: int
+
+    name: str
+    """A name for the forecast period. May be empty."""
+
+    startTime: datetime
+    """The start time of the forecast period."""
+
+    endTime: datetime
+    """The end time of the forecast period."""
+
+    isDaytime: bool
+    """Whether the forecast period is during the day."""
+
+    temperature: int
+    """The temperature in the unit specified by temperatureUnit."""
+
+    temperatureUnit: Literal["F", "C"]
+    """The unit of the temperature. Either degrees Fahrenheit or Celsius."""
+
+    temperatureTrend: Literal["falling", "rising"] | None
+    """The trend of the temperature."""
+
+    precipProbability: int
+    """The probability of precipitation, in percent (scaled to 0-100)."""
+
+    dewpoint: float
+    """The dew point in degrees Celsius."""
+
+    relativeHumidity: int
+    """The relative humidity, in percent (scaled to 0-100)."""
+
+    windSpeed: str
+    """A string representation of the wind speed."""
+
+    windDirection: WindDirectionType
+    """A string representation of the wind direction."""
+
+    icon: str  # again deprecated by NOAA, but their own API completely ignores feature flags...
+    """A URL to an icon representing the weather."""
+
+    shortForecast: str
+    """A brief description of the weather."""
+
+    detailedForecast: str
+    """A detailed description of the weather. May be empty if none is provided."""
+
+
+class ForecastGeneration(Enum):
+    WeekForecast = "BaselineForecastGenerator"
+    HourForecast = "HourlyForecastGenerator"
+
+
+@dataclass
+class Forecast:
+    """A weather forecast."""
+
+    units: Literal["us", "si"]
+    """The units used in the forecast. Either US or metric (denoted as SI)."""
+
+    generation: ForecastGeneration
+    """The type of forecast generator used.
+    This identifies whether this forecast details extended periods or hourly data.
+    """
+
+    generatedAt: datetime
+    """The time the forecast was generated."""
+
+    updateTime: datetime
+    """The time the forecast was last updated."""
+
+    validPeriodStart: datetime
+    """The start of the forecast period."""
+
+    validPeriodEnd: datetime
+    """The end of the forecast period."""
+
+    periods: list[ForecastPeriod]
+    """The forecast periods."""
+
+    def __getitem__(self, item: int) -> ForecastPeriod:
+        return self.periods[item]
+
+    def __iter__(self):
+        return iter(self.periods)

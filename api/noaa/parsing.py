@@ -2,32 +2,8 @@ from .utils import parse_iso_interval
 from .types import *
 
 
-def __current_weather(data: dict) -> WeatherCondition:
-    """Parse the current weather condition from a gridpoint forecast."""
-    coverage = data['coverage']
-    weather = data['weather']
-    intensity = data['intensity']
-    visibility = data['visibility']['value']
-    attributes = data['attributes']
-
-    return WeatherCondition(coverage, weather, intensity, visibility, attributes)
-
-
-def __current_hazards(data: list) -> list[Hazard]:
-    """Parse the current weather hazards from a gridpoint forecast."""
-    hazards = []
-    for hazard_period in data:
-        start, end = parse_iso_interval(hazard_period['validTime'])
-        for hazard in hazard_period['value']:
-            phenomenon = VtecPhenomenon(hazard['phenomenon'])
-            significance = VtecSignificance(hazard['significance'])
-            event_number = hazard['eventNumber']
-            hazards.append(Hazard(phenomenon, significance, event_number, start, end))
-    return hazards
-
-
 def current_conditions_from_observation(data: dict) -> CurrentObservation:
-    """Parse current conditions from a gridpoint forecast."""
+    """Parse current conditions from an observation data object."""
 
     observation_time = datetime.fromisoformat(data['timestamp'])
     text_description = data['textDescription']
@@ -55,3 +31,39 @@ def current_conditions_from_observation(data: dict) -> CurrentObservation:
                               visibility, max_temperature, min_temperature, precipitation_last_hour,
                               precipitation_last_3_hours, precipitation_last_6_hours, relative_humidity,
                               wind_chill, heat_index)
+
+
+def _period(data: dict) -> ForecastPeriod:
+    """Parse a single forecast period."""
+    number = data['number']
+    name = data['name']
+    startTime = datetime.fromisoformat(data['startTime'])
+    endTime = datetime.fromisoformat(data['endTime'])
+    is_daytime = data['isDaytime']
+    temperature = data['temperature']
+    temperature_unit = data['temperatureUnit']
+    temperature_trend = data['temperatureTrend']
+    probability_of_precipitation = data['probabilityOfPrecipitation']
+    dewpoint = data['dewpoint']
+    relative_humidity = data['relativeHumidity']
+    wind_speed = data['windSpeed']
+    wind_direction = data['windDirection']
+    icon = data['icon']
+    short_forecast = data['shortForecast']
+    detailed_forecast = data['detailedForecast']
+
+    return ForecastPeriod(number, name, startTime, endTime, is_daytime, temperature, temperature_unit,
+                          temperature_trend, probability_of_precipitation, dewpoint, relative_humidity, wind_speed,
+                          wind_direction, icon, short_forecast, detailed_forecast)
+
+
+def forecast_from_data(data: dict) -> Forecast:
+    """Parse a forecast data object."""
+    units = data['units']
+    forecast_generator = ForecastGeneration(data['forecastGenerator'])
+    generated_at = datetime.fromisoformat(data['generatedAt'])
+    update_time = datetime.fromisoformat(data['updateTime'])
+    start, end = parse_iso_interval(data['validTimes'])
+    periods = [_period(period) for period in data['periods']]
+
+    return Forecast(units, forecast_generator, generated_at, update_time, start, end, periods)
