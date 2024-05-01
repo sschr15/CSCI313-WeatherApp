@@ -1,9 +1,9 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Literal
+from typing import Literal, TypedDict
+
+from .utils import noaa_data, NoaaQuantifiable
 
 CoverageType = Literal[
     None,
@@ -118,6 +118,19 @@ WindDirectionType = Literal[
     'S', 'SSW', 'SW', 'WSW',
     'W', 'WNW', 'NW', 'NNW',
 ]
+
+MetarPhenomenon = TypedDict('MetarPhenomenon', {
+    'intensity': MetarIntensityType | None,
+    'modifier': MetarModifierType | None,
+    'weather': MetarWeatherType,
+    'rawString': str,
+})
+
+
+@dataclass
+class TimePeriod:
+    start: datetime
+    end: datetime
 
 
 class VtecFixedIdentifier(Enum):
@@ -250,7 +263,7 @@ class VtecCode:
     endTime: datetime
 
     @classmethod
-    def from_string(cls, code: str) -> VtecCode:
+    def from_string(cls, code: str) -> 'VtecCode':
         """Create a VTEC code from a string."""
         if not code:
             raise ValueError("VTEC code cannot be empty")
@@ -348,24 +361,7 @@ class Conditions:
     """The current weather hazards."""
 
 
-@dataclass
-class MetarPhenomenon:  # yes this is the name NOAA uses
-    """A representation of a decoded METAR phenomenon string."""
-
-    intensity: MetarIntensityType | None
-    """The intensity of the phenomenon, if applicable."""
-
-    modifier: MetarModifierType | None
-    """The modifier of the phenomenon, if applicable."""
-
-    weather: MetarWeatherType
-    """The type of weather phenomenon."""
-
-    rawString: str
-    """The raw METAR string for the phenomenon."""
-
-
-@dataclass
+@noaa_data
 class CurrentObservation:
     """A snippet of the current weather observation."""
 
@@ -381,56 +377,56 @@ class CurrentObservation:
     presentWeather: list[MetarPhenomenon]
     """The current weather conditions."""
 
-    temperature: float
+    temperature: NoaaQuantifiable[float]
     """The temperature in degrees Celsius."""
 
-    dewpoint: float
+    dewpoint: NoaaQuantifiable[float]
     """The dew point in degrees Celsius."""
 
-    windDirection: int
+    windDirection: NoaaQuantifiable[int]
     """The wind direction (direction it's coming from), in degrees."""
 
-    windSpeed: float
+    windSpeed: NoaaQuantifiable[float]
     """The wind speed in kilometers per hour."""
 
-    windGust: float | None
+    windGust: NoaaQuantifiable[float | None]
     """The wind gust speed in kilometers per hour, or None if not present in the data."""
 
-    barometricPressure: float
+    barometricPressure: NoaaQuantifiable[float]
     """The barometric pressure in pascals."""
 
-    seaLevelPressure: float
+    seaLevelPressure: NoaaQuantifiable[float]
     """The pressure if measured at sea level in pascals."""
 
-    visibility: float
+    visibility: NoaaQuantifiable[float]
     """The visibility in kilometers."""
 
-    maxTemperatureLast24Hours: float | None
+    maxTemperatureLast24Hours: NoaaQuantifiable[float | None]
     """The maximum temperature in the last 24 hours, or None if not present in the data."""
 
-    minTemperatureLast24Hours: float | None
+    minTemperatureLast24Hours: NoaaQuantifiable[float | None]
     """The minimum temperature in the last 24 hours, or None if not present in the data."""
 
-    precipitationLastHour: float
+    precipitationLastHour: NoaaQuantifiable[float]
     """The precipitation in the last hour in millimeters."""
 
-    precipitationLast3Hours: float | None
+    precipitationLast3Hours: NoaaQuantifiable[float | None]
     """The precipitation in the last 3 hours in millimeters, or None if not present in the data."""
 
-    precipitationLast6Hours: float | None
+    precipitationLast6Hours: NoaaQuantifiable[float | None]
     """The precipitation in the last 6 hours in millimeters, or None if not present in the data."""
 
-    relativeHumidity: float
+    relativeHumidity: NoaaQuantifiable[float]
     """The relative humidity, in percent (scaled to 0-100, not rounded)."""
 
-    windChill: float | None
+    windChill: NoaaQuantifiable[float | None]
     """The wind chill (cold feels-like), or None if not present in the data."""
 
-    heatIndex: float | None
+    heatIndex: NoaaQuantifiable[float | None]
     """The heat index (hot feels-like), or None if not present in the data."""
 
 
-@dataclass
+@noaa_data
 class ForecastPeriod:
     """A period of weather forecast data."""
 
@@ -457,13 +453,13 @@ class ForecastPeriod:
     temperatureTrend: Literal["falling", "rising"] | None
     """The trend of the temperature."""
 
-    precipProbability: int
+    probabilityOfPrecipitation: NoaaQuantifiable[int]
     """The probability of precipitation, in percent (scaled to 0-100)."""
 
-    dewpoint: float
+    dewpoint: NoaaQuantifiable[float]
     """The dew point in degrees Celsius."""
 
-    relativeHumidity: int
+    relativeHumidity: NoaaQuantifiable[float]
     """The relative humidity, in percent (scaled to 0-100)."""
 
     windSpeed: str
@@ -487,7 +483,7 @@ class ForecastGeneration(Enum):
     HourForecast = "HourlyForecastGenerator"
 
 
-@dataclass
+@noaa_data(ignored_fields=['generation', 'periods'])
 class Forecast:
     """A weather forecast."""
 
@@ -505,14 +501,16 @@ class Forecast:
     updateTime: datetime
     """The time the forecast was last updated."""
 
-    validPeriodStart: datetime
-    """The start of the forecast period."""
-
-    validPeriodEnd: datetime
-    """The end of the forecast period."""
+    validTimes: TimePeriod
+    """The time period the forecast is valid for."""
 
     periods: list[ForecastPeriod]
     """The forecast periods."""
+
+    def _post_init(self, data: dict):
+        # Init stuff that isn't initialized by the decorator
+        self.generation = ForecastGeneration(data['forecastGenerator'])
+        self.periods = [ForecastPeriod(**period) for period in data['periods']]
 
     def __getitem__(self, item: int) -> ForecastPeriod:
         return self.periods[item]
