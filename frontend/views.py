@@ -12,8 +12,8 @@ _cached_currents: dict[tuple[float, float], tuple[datetime, CurrentObservation]]
 _fifteen_minutes = datetime.timedelta(minutes=15)
 _one_hour = datetime.timedelta(hours=1)
 
-central_time = datetime.timezone(datetime.timedelta(hours=-6))
-eastern_time = datetime.timezone(datetime.timedelta(hours=-5))
+central_time = datetime.timezone(datetime.timedelta(hours=-5))
+eastern_time = datetime.timezone(datetime.timedelta(hours=-4))
 
 locations = {
     'Fargo': (46.8772, -96.7898),
