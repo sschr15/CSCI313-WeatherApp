@@ -31,7 +31,8 @@
                                         <b>Temperature: </b>{{ current.temp_string }}
                                     </td>
                                     <td class="fit">
-                                        <b>Feels like: </b>{% firstof current.windChill|c2f current.heatIndex|c2f current.temperature %}&deg;F
+                                        <b>Feels like: </b>
+                                        {% firstof current.windChill|c2f|floatformat:0 current.heatIndex|c2f|floatformat:0 current.temperature %}&deg;F
                                     </td>
                                 </tr>
                                 <tr>

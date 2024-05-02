@@ -5,6 +5,8 @@ from django.shortcuts import render
 from api.noaa import *
 from api.noaa.types import Forecast, CurrentObservation
 
+_cached_data: dict[tuple[float, float], NoaaData] = {}
+
 _cached_hourlies: dict[tuple[float, float], tuple[datetime, Forecast]] = {}
 _cached_weeklies: dict[tuple[float, float], tuple[datetime, Forecast]] = {}
 _cached_currents: dict[tuple[float, float], tuple[datetime, CurrentObservation]] = {}
@@ -37,10 +39,16 @@ favorites = ['Fargo', 'New York', 'Florida']
 nearby = ['Minnesota', 'Wahpeton', 'South Dakota']
 
 
+def _data(location: tuple[float, float]) -> NoaaData:
+    if _cached_data.get(location) is None:
+        _cached_data[location] = NoaaData.at_location(*location)
+    return _cached_data[location]
+
+
 def index(request):
     request_time = datetime.datetime.now()
 
-    data = {k: NoaaData.at_location(*v) for k, v in locations.items()}
+    data = {k: _data(v) for k, v in locations.items()}
     hourly_forecasts = {
         k: data[k].hourly_forecast()
         if _cached_hourlies.get(v) is None or _cached_hourlies[v][0] + _fifteen_minutes < request_time
@@ -89,7 +97,7 @@ def index(request):
 def weekly_view(request):
     request_time = datetime.datetime.now()
 
-    data = {k: NoaaData.at_location(*v) for k, v in locations.items()}
+    data = {k: _data(v) for k, v in locations.items()}
     weekly_forecasts = {
         k: data[k].week_forecast()
         if _cached_weeklies.get(v) is None or _cached_weeklies[v][0] + _one_hour < request_time
@@ -136,7 +144,7 @@ def city_view(request, lat_long):
     lat, long = map(float, lat_long.split(','))
     location = (lat, long)
 
-    data = NoaaData.at_location(*location)
+    data = _data(location)
 
     current_conditions = _cached_currents.get(location)
     if current_conditions is None or current_conditions[0] + _fifteen_minutes < datetime.datetime.now():
