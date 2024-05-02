@@ -128,7 +128,12 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
             for field in fields:
                 if field not in data and field not in ignored:
                     raise TypeError(f'Missing required field: {field}')
-                if field in quantifiables:
+
+                if field in ignored:
+                    continue
+                elif data[field] is None:
+                    value = None
+                elif field in quantifiables:
                     value = data[field]['value']
                     self._noaa_quantifiable_types[field] = data[field]['unitCode']
                 elif field in datetimes:
@@ -137,8 +142,6 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
                     value = parse_iso_interval(data[field])
                 elif field in enums:
                     value = enums[field](data[field])
-                elif field in ignored:
-                    continue
                 else:
                     value = data[field]
 

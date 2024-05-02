@@ -54,3 +54,16 @@ th, td {
     padding: 0 !important;
     margin: 0;
 }
+
+.material-symbols-outlined {
+     font-variation-settings: 'FILL' 1,
+     'wght' 400,
+     'GRAD' 0,
+     'opsz' 24;
+}
+
+#weather-here, .pls-center-for-the-life-of-me {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

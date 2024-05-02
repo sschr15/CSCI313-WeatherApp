@@ -3,13 +3,14 @@ import datetime
 from django.shortcuts import render
 
 from api.noaa import *
-from api.noaa.types import Forecast, CurrentObservation
+from api.noaa.types import Forecast, CurrentObservation, Alert
 
 _cached_data: dict[tuple[float, float], NoaaData] = {}
 
 _cached_hourlies: dict[tuple[float, float], tuple[datetime, Forecast]] = {}
 _cached_weeklies: dict[tuple[float, float], tuple[datetime, Forecast]] = {}
 _cached_currents: dict[tuple[float, float], tuple[datetime, CurrentObservation]] = {}
+_cached_alerts: dict[tuple[float, float], tuple[datetime, list[Alert]]] = {}
 
 _fifteen_minutes = datetime.timedelta(minutes=15)
 _one_hour = datetime.timedelta(hours=1)
@@ -161,6 +162,11 @@ def city_view(request, lat_long):
         weekly_forecast = (datetime.datetime.now(), data.week_forecast())
         _cached_weeklies[location] = weekly_forecast
 
+    alerts = _cached_alerts.get(location)
+    if alerts is None or alerts[0] + _one_hour < datetime.datetime.now():
+        alerts = (datetime.datetime.now(), data.alerts())
+        _cached_alerts[location] = alerts
+
     temp = round((current_conditions[1].temperature * 9 / 5) + 32) if current_conditions[1].temperature is not None else None
     # noinspection PyUnresolvedReferences
     current_conditions[1].temp_string = f'{temp}°F' if temp is not None else 'Unknown'
@@ -181,6 +187,7 @@ def city_view(request, lat_long):
         'current': current_conditions[1],
         'hourly': hourly_forecast[1],
         'weekly': weekly_forecast[1],
+        'alerts': alerts[1],
         'radar': data.radar_gif_url,
         'enhanced_radar': data.enhanced_radar_url,
     }

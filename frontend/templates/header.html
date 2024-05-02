@@ -18,6 +18,29 @@
                 <a class="nav-link" href="careers_view">Careers</a>
             </div>
         </div>
+        <span class="d-flex">
+            <button id="weather-here" class="btn btn-primary">
+                <span class="material-symbols-outlined">
+                my_location
+                </span>
+            </button>
+        </span>
     </div>
 </nav>
-  
+
+<script>
+    const weatherHere = document.getElementById('weather-here');
+    weatherHere.addEventListener('click', () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            window.location.href = `/city_view/${lat},${lon}`;
+        }, (error) => {
+            console.error(error);
+        });
+    });
+
+    navigator.geolocation.getCurrentPosition(() => {}, (error) => {
+        weatherHere.style.display = 'none';
+    });
+</script>
