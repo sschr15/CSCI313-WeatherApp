@@ -10,20 +10,23 @@ def celsius_to_fahrenheit(celsius):
 
 @register.filter(name='pa2inhg')
 def pascals_to_inches_of_mercury(pascals):
-    return pascals * 0.0002953
+    return pascals * 0.0002953 if pascals is not None else None
 
 
 @register.filter(name='kmh2mph')
 def kilometers_per_hour_to_miles_per_hour(kmh):
-    return kmh * 0.621371
+    return kmh * 0.621371 if kmh is not None else None
 
 
 @register.filter(name='m2mi')
 def meters_to_miles(meters):
-    return meters * 0.000621371
+    return meters * 0.000621371 if meters is not None else None
 
 
 @register.filter(name='deg2dir')
 def degrees_to_direction(degrees):
+    if degrees is None:
+        return None
+
     from api.noaa.utils import closest_direction
     return closest_direction(degrees)

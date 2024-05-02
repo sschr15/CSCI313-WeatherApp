@@ -41,7 +41,10 @@
                                 <tr>
                                     <!-- td: icon -->
                                     <td>
-                                        <b>Wind: </b>{{ current.windSpeed|kmh2mph|floatformat:0 }}mph {{ current.windDirection|deg2dir }}
+                                        <b>Wind: </b>{{ current.windSpeed|kmh2mph|floatformat:0 }}mph
+                                        {% if current.windDirection %}
+                                            {{ current.windDirection|deg2dir }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <b>Gusts: </b>
