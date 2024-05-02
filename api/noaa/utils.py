@@ -85,7 +85,7 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
 
             fields[field_name] = type_
 
-            type_obj = type_ if type(type_) is type else type_
+            type_obj = type_ if type(type_) is type else type(type_)
 
             if type_obj is _Quantifiable:
                 fields[field_name] = type_.type
