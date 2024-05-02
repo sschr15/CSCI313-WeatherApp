@@ -1,0 +1,50 @@
+.weather-card {
+    background-color: #008fff;
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 1em;
+}
+
+.weather-card table tr td, .weather-card table tr th, .weather-card table tr {
+    background-color: #008fff;
+    border-color: #0068bc;
+}
+
+.weather-card a {
+    color: black;
+}
+
+td.fit, th.fit {
+    white-space: nowrap;
+    width: 1%;
+}
+
+td.wrap-fit, th.wrap-fit {
+    white-space: normal;
+    width: 1%;
+}
+
+th, td {
+    vertical-align: center;
+}
+
+.title {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding-bottom: 0.5em;
+}
+
+.weather-icon {
+    width: auto;
+    height: 3.5em;
+}
+
+.title .weather-icon {
+    height: 1.5em;
+    border-radius: 0.25em;
+}
+
+.has-weather-icon {
+    padding: 0 !important;
+    margin: 0;
+}

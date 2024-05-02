@@ -520,6 +520,9 @@ class Forecast:
     def __iter__(self):
         return iter(self.periods)
 
+    def __len__(self):
+        return len(self.periods)
+
 
 class AlertStatus(Enum):
     Actual = "Actual"

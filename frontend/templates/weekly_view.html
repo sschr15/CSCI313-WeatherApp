@@ -3,8 +3,7 @@
 <html lang="en">
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link href="{% static 'css/styles.css' %}"/>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
         <link rel="manifest" href="{% static 'manifest.json' %}"/>
         <title>Weather</title>
     </head>
@@ -17,110 +16,96 @@
             <button style='background-color: blue; color: white;'>Hourly Weather</button>
           </a>
         </div>
-        <div class="container-fluid" style="font-size:40px; text-align:center;">
-            Favorite Places
-          </div>
+        <h2 class="text-center">Favorite Places</h2>
         <div class="container-fluid">
             <div class="row justify-content-center">
-              <a link href="city_view_weekly">
-              <div class="col-md-auto"  display="flex" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                Fargo <span style="float:right;">Current Temp: {{current_temp1}}&degF</span> </a> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_11}}&nbsp;   {{week_temp_11}}&degF&nbsp;  {{week_wind_11}}&nbsp;  {{week_forecast_11}}    <br>
-                {{week_date_21}}&nbsp;   {{week_temp_21}}&degF&nbsp;  {{week_wind_21}}&nbsp;  {{week_forecast_21}}    <br>
-                {{week_date_31}}&nbsp;   {{week_temp_31}}&degF&nbsp;  {{week_wind_31}}&nbsp;  {{week_forecast_31}}    <br>
-                {{week_date_41}}&nbsp;   {{week_temp_41}}&degF&nbsp;  {{week_wind_41}}&nbsp;  {{week_forecast_41}}    <br>
-                {{week_date_51}}&nbsp;   {{week_temp_51}}&degF&nbsp;  {{week_wind_51}}&nbsp;  {{week_forecast_51}}    <br>
-                {{week_date_61}}&nbsp;   {{week_temp_61}}&degF&nbsp;  {{week_wind_61}}&nbsp;  {{week_forecast_61}}    <br>
-                {{week_date_71}}&nbsp;   {{week_temp_71}}&degF&nbsp;  {{week_wind_71}}&nbsp;  {{week_forecast_71}}    <br>
-                </span>
-              </div>
-              <div class="col-md-auto" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                New York <span style="float:right;">Current Temp: {{current_temp2}}&degF</span> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_12}}&nbsp;   {{week_temp_12}}&degF&nbsp;  {{week_wind_12}}&nbsp;  {{week_forecast_12}}    <br>
-                {{week_date_22}}&nbsp;   {{week_temp_22}}&degF&nbsp;  {{week_wind_22}}&nbsp;  {{week_forecast_22}}    <br>
-                {{week_date_32}}&nbsp;   {{week_temp_32}}&degF&nbsp;  {{week_wind_32}}&nbsp;  {{week_forecast_32}}    <br>
-                {{week_date_42}}&nbsp;   {{week_temp_42}}&degF&nbsp;  {{week_wind_42}}&nbsp;  {{week_forecast_42}}    <br>
-                {{week_date_52}}&nbsp;   {{week_temp_52}}&degF&nbsp;  {{week_wind_52}}&nbsp;  {{week_forecast_52}}    <br>
-                {{week_date_62}}&nbsp;   {{week_temp_62}}&degF&nbsp;  {{week_wind_62}}&nbsp;  {{week_forecast_62}}    <br>
-                {{week_date_72}}&nbsp;   {{week_temp_72}}&degF&nbsp;  {{week_wind_72}}&nbsp;  {{week_forecast_72}}    <br>
-                </span>
-              </div>
-              <div class="col-md-auto" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                Florida <span style="float:right;">Current Temp: {{current_temp3}}&degF</span> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_13}}&nbsp;   {{week_temp_13}}&degF&nbsp;  {{week_wind_13}}&nbsp;  {{week_forecast_13}}    <br>
-                {{week_date_23}}&nbsp;   {{week_temp_23}}&degF&nbsp;  {{week_wind_23}}&nbsp;  {{week_forecast_23}}    <br>
-                {{week_date_33}}&nbsp;   {{week_temp_33}}&degF&nbsp;  {{week_wind_33}}&nbsp;  {{week_forecast_33}}    <br>
-                {{week_date_43}}&nbsp;   {{week_temp_43}}&degF&nbsp;  {{week_wind_43}}&nbsp;  {{week_forecast_43}}    <br>
-                {{week_date_53}}&nbsp;   {{week_temp_53}}&degF&nbsp;  {{week_wind_53}}&nbsp;  {{week_forecast_53}}    <br>
-                {{week_date_63}}&nbsp;   {{week_temp_63}}&degF&nbsp;  {{week_wind_63}}&nbsp;  {{week_forecast_63}}    <br>
-                {{week_date_73}}&nbsp;   {{week_temp_73}}&degF&nbsp;  {{week_wind_73}}&nbsp;  {{week_forecast_73}}    <br>
-                </span>
-              </div>
+                {% for name, data in favorites.items %}
+                    <div class="col weather-card">
+                        <div class="title">
+                            <a href="city_view/{{ data.location }}">{{ name }}</a>
+                            <span style="float:right;">
+                                Current: {{ data.current_temp }}&deg;F
+                                <img src="{{ data.current_icon }}" alt="icon" class="weather-icon">
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th class="fit" scope="col" colspan="2"></th>
+                                        <th class="fit" scope="col">Temp</th>
+                                        <th class="fit" scope="col">Wind</th>
+                                        <th scope="col">Forecast</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="table-group-divider">
+                                {% for period in data %}
+                                    <tr data-bs-toggle="tooltip" data-bs-title="{{ period.detailedForecast }}">
+                                        <td class="fit has-weather-icon">
+                                            <img src="{{ period.icon }}" alt="icon" class="weather-icon">
+                                        </td>
+                                        <th class="wrap-fit" scope="row">{{ period.name }}</th>
+                                        <td class="fit">{{ period.temperature }}&deg;F</td>
+                                        <td class="fit">{{ period.windSpeed }} {{ period.windDirection }}</td>
+                                        <td>{{ period.shortForecast }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
           </div>
-          <div class="container-fluid" style="font-size:40px; text-align:center;">
-            Weather Near You
-          </div>
+          <h2 class="text-center">Weather Near You</h2>
           <div class="container-fluid">
             <div class="row justify-content-center">
-              <div class="col-md-auto" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                Minnesota <span style="float:right;">Current Temp: {{current_temp4}}&degF</span> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_14}}&nbsp;   {{week_temp_14}}&degF&nbsp;  {{week_wind_14}}&nbsp;  {{week_forecast_14}}    <br>
-                {{week_date_24}}&nbsp;   {{week_temp_24}}&degF&nbsp;  {{week_wind_24}}&nbsp;  {{week_forecast_24}}    <br>
-                {{week_date_34}}&nbsp;   {{week_temp_34}}&degF&nbsp;  {{week_wind_34}}&nbsp;  {{week_forecast_34}}    <br>
-                {{week_date_44}}&nbsp;   {{week_temp_44}}&degF&nbsp;  {{week_wind_44}}&nbsp;  {{week_forecast_44}}    <br>
-                {{week_date_54}}&nbsp;   {{week_temp_54}}&degF&nbsp;  {{week_wind_54}}&nbsp;  {{week_forecast_54}}    <br>
-                {{week_date_64}}&nbsp;   {{week_temp_64}}&degF&nbsp;  {{week_wind_64}}&nbsp;  {{week_forecast_64}}    <br>
-                {{week_date_74}}&nbsp;   {{week_temp_74}}&degF&nbsp;  {{week_wind_74}}&nbsp;  {{week_forecast_74}}    <br>
-                </span>
-              </div>
-              <div class="col-md-auto" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                Wahpeton <span style="float:right;">Current Temp: {{current_temp5}}&degF</span> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_15}}&nbsp;   {{week_temp_15}}&degF&nbsp;  {{week_wind_15}}&nbsp;  {{week_forecast_15}}    <br>
-                {{week_date_25}}&nbsp;   {{week_temp_25}}&degF&nbsp;  {{week_wind_25}}&nbsp;  {{week_forecast_25}}    <br>
-                {{week_date_35}}&nbsp;   {{week_temp_35}}&degF&nbsp;  {{week_wind_35}}&nbsp;  {{week_forecast_35}}    <br>
-                {{week_date_45}}&nbsp;   {{week_temp_45}}&degF&nbsp;  {{week_wind_45}}&nbsp;  {{week_forecast_45}}    <br>
-                {{week_date_55}}&nbsp;   {{week_temp_55}}&degF&nbsp;  {{week_wind_55}}&nbsp;  {{week_forecast_55}}    <br>
-                {{week_date_65}}&nbsp;   {{week_temp_65}}&degF&nbsp;  {{week_wind_65}}&nbsp;  {{week_forecast_65}}    <br>
-                {{week_date_75}}&nbsp;   {{week_temp_75}}&degF&nbsp;  {{week_wind_75}}&nbsp;  {{week_forecast_75}}    <br>
-                </span>
-              </div>
-              <div class="col-md-auto" style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px;">
-                South Dakota <span style="float:right;">Current Temp: {{current_temp6}}&degF</span> <br>
-                <span style="font-size:20px; word-spacing: 18px;">
-                Day    Temp  Wind   Forecast    <br>
-                </span>
-                <span style="font-size:20px;">
-                {{week_date_16}}&nbsp;   {{week_temp_16}}&degF&nbsp;  {{week_wind_16}}&nbsp;  {{week_forecast_16}}    <br>
-                {{week_date_26}}&nbsp;   {{week_temp_26}}&degF&nbsp;  {{week_wind_26}}&nbsp;  {{week_forecast_26}}    <br>
-                {{week_date_36}}&nbsp;   {{week_temp_36}}&degF&nbsp;  {{week_wind_36}}&nbsp;  {{week_forecast_36}}    <br>
-                {{week_date_46}}&nbsp;   {{week_temp_46}}&degF&nbsp;  {{week_wind_46}}&nbsp;  {{week_forecast_46}}    <br>
-                {{week_date_56}}&nbsp;   {{week_temp_56}}&degF&nbsp;  {{week_wind_56}}&nbsp;  {{week_forecast_56}}    <br>
-                {{week_date_66}}&nbsp;   {{week_temp_66}}&degF&nbsp;  {{week_wind_66}}&nbsp;  {{week_forecast_66}}    <br>
-                {{week_date_76}}&nbsp;   {{week_temp_76}}&degF&nbsp;  {{week_wind_76}}&nbsp;  {{week_forecast_76}}    <br>
-                </span>
-              </div>
+                {% for name, data in nearby.items %}
+                    <div class="col weather-card">
+                        <div class="title">
+                            <a href="city_view/{{ data.location }}">{{ name }}</a>
+                            <span style="float:right;">
+                                Current: {{ data.current_temp }}&deg;F
+                                <img src="{{ data.current_icon }}" alt="icon" class="weather-icon">
+                            </span>
+                        </div>
+
+                        <table class="table table-sm table-bordered" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="fit" scope="col" colspan="2"></th>
+                                    <th class="fit" scope="col">Temp</th>
+                                    <th class="fit" scope="col">Wind</th>
+                                    <th scope="col">Forecast</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="table-group-divider">
+                            {% for period in data %}
+                                <tr data-bs-toggle="tooltip" data-bs-title="{{ period.detailedForecast }}">
+                                    <td class="fit has-weather-icon">
+                                        <img src="{{ period.icon }}" alt="icon" class="weather-icon">
+                                    </td>
+                                    <th class="wrap-fit" scope="row">{{ period.name }}</th>
+                                    <td class="fit">{{ period.temperature }}&deg;F</td>
+                                    <td class="fit">{{ period.windSpeed }} {{ period.windDirection }}</td>
+                                    <td>{{ period.shortForecast }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
             </div>
           </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <script>
+            Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach((element) => {
+                new bootstrap.Tooltip(element);
+            });
+        </script>
     </body>
 </html>
