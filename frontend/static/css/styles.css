@@ -1,5 +1,11 @@
+body {
+    background-color: #222222;
+    color: white;
+}
+
 .weather-card {
     background-color: #008fff;
+    color: black;
     margin: 0.5em;
     padding: 0.5em;
     border-radius: 1em;

@@ -11,6 +11,26 @@ _start_and_end = re.compile(r'(?P<start>{time})/(?P<end>{time})'.format(time=_is
 _start_and_duration = re.compile(r'(?P<start>{time})/(?P<duration>{duration})'.format(time=_iso_time_pattern.pattern, duration=_iso_duration_pattern.pattern))
 _duration_and_end = re.compile(r'(?P<duration>{duration})/(?P<end>{time})'.format(time=_iso_time_pattern.pattern, duration=_iso_duration_pattern.pattern))
 
+_compass_directions = [
+    ('N', 0),
+    ('NNE', 22.5),
+    ('NE', 45),
+    ('ENE', 67.5),
+    ('E', 90),
+    ('ESE', 112.5),
+    ('SE', 135),
+    ('SSE', 157.5),
+    ('S', 180),
+    ('SSW', 202.5),
+    ('SW', 225),
+    ('WSW', 247.5),
+    ('W', 270),
+    ('WNW', 292.5),
+    ('NW', 315),
+    ('NNW', 337.5),
+    ('N', 360)
+]
+
 
 def parse_iso_duration(duration: str) -> timedelta:
     """Parse an ISO 8601 duration string into a datetime.
@@ -142,3 +162,15 @@ def noaa_data(class_arg=None, *, ignored_fields: list[str] | None = None):
         return cls
 
     return generator(class_arg) if class_arg else generator
+
+
+def closest_direction(degrees: int | str) -> str:
+    """Get the closest cardinal direction to the given degrees."""
+    if isinstance(degrees, str):
+        degrees = int(degrees)
+
+    degrees: int
+
+    return min(_compass_directions,
+               key=lambda direction: abs(direction[1] - degrees))[0]
+

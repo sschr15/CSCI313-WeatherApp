@@ -401,7 +401,7 @@ class CurrentObservation:
     """The pressure if measured at sea level in pascals."""
 
     visibility: NoaaQuantifiable[float]
-    """The visibility in kilometers."""
+    """The visibility in meters."""
 
     maxTemperatureLast24Hours: NoaaQuantifiable[float | None]
     """The maximum temperature in the last 24 hours, or None if not present in the data."""

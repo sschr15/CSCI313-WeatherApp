@@ -54,6 +54,11 @@ class NoaaData:
         """
         ...
 
+    @property
+    def relative_location(self) -> str:
+        """Get the name of the location this data is for."""
+        ...
+
     @overload
     def __getitem__(self, item: Literal['week', 'hour', 'weekly', 'hourly']) -> Forecast:
         """Get a forecast for a time period."""

@@ -1,11 +1,14 @@
 from __future__ import annotations
-from .api_calls import current_data
+
 from base64 import b64encode
 from json import dumps
 from urllib.parse import quote as encode_url
+import requests
+
+from .api_calls import current_data
 from .parsing import current_conditions_from_observation, forecast_from_data
 from .types import *
-import requests
+from .utils import closest_direction
 
 
 def _request(url):
@@ -82,6 +85,27 @@ class NoaaData:
         json = dumps(obj)
         settings = f'v1_{b64encode(json.encode()).decode()}'
         return f'https://radar.weather.gov/?settings={encode_url(settings)}'
+
+    # noinspection PyTypeChecker
+    @property
+    def relative_location(self):
+        if 'relativeLocation' not in self.__data or 'properties' not in self.__data['relativeLocation']:
+            lat = str(abs(self.__lat)) + '°' + ('N' if self.__lat >= 0 else 'S')
+            lon = str(abs(self.__lon)) + '°' + ('E' if self.__lon >= 0 else 'W')
+            return f'{lat}, {lon}'
+
+        location = self.__data['relativeLocation']['properties']
+        nearest_city = f'{location["city"]}, {location["state"]}'
+        distance = location['distance']['value']
+        distance_miles = distance * 0.000621371  # meters to miles
+
+        if distance_miles < 5:  # We're practically in the city, it's probably okay to just say the city
+            return nearest_city
+
+        rounded = round(distance_miles)
+        bearing_degrees = location['bearing']['value']
+        bearing = closest_direction(bearing_degrees)
+        return f'{rounded}mi {bearing} of {nearest_city}'
 
     def __getitem__(self, key):
         if key in ('week', 'weekly'):
