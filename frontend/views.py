@@ -16,36 +16,42 @@ def index(request):
     central_time = datetime.timezone(datetime.timedelta(hours=-6))
 
     #fargo hourly data
+    current_temp_1 = round(((fargo.current_conditions().temperature)*9/5)+32)
     hourlyFargo = fargo.hourly_forecast()
     fargoHourlyTemp = {}
     fargoHourlyTime = {}
     fargoHourlyWind = {}
     fargoHourlyShortForecast = {}
     #new_york hourly data
+    current_temp_2 = round(((new_york.current_conditions().temperature)*9/5)+32)
     hourlyNewYork= new_york.hourly_forecast()
     new_yorkHourlyTemp = {}
     new_yorkHourlyTime = {}
     new_yorkHourlyWind = {}
     new_yorkHourlyShortForecast = {}
     #florida hourly data
+    current_temp_3 = round(((florida.current_conditions().temperature)*9/5)+32)
     hourlyFlorida = florida.hourly_forecast()
     floridaHourlyTemp = {}
     floridaHourlyTime = {}
     floridaHourlyWind = {}
     floridaHourlyShortForecast = {}
     #minnesota hourly data
+    current_temp_4 = round(((minnesota.current_conditions().temperature)*9/5)+32)
     hourlyMinnesota = minnesota.hourly_forecast()
     minnesotaHourlyTemp = {}
     minnesotaHourlyTime = {}
     minnesotaHourlyWind = {}
     minnesotaHourlyShortForecast = {}
     #wahpeton hourly data
+    current_temp_5 = round(((wahpeton.current_conditions().temperature)*9/5)+32)
     hourlyWahpeton = wahpeton.hourly_forecast()
     wahpetonHourlyTemp = {}
     wahpetonHourlyTime = {}
     wahpetonHourlyWind = {}
     wahpetonHourlyShortForecast = {}
     #SD hourly data
+    current_temp_6 = round(((south_dakota.current_conditions().temperature)*9/5)+32)
     hourlySouthDakota = south_dakota.hourly_forecast()
     south_dakotaHourlyTemp = {}
     south_dakotaHourlyTime = {}
@@ -111,7 +117,7 @@ def index(request):
 
 
     context = {
-        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
+        #'current_temp1' : current_temp_1,
         'hour_11' : fargoHourlyTime[1],
         'hour_21' : fargoHourlyTime[2],
         'hour_31' : fargoHourlyTime[3],
@@ -141,7 +147,7 @@ def index(request):
         'hourly_short_forecast_61' : fargoHourlyShortForecast[6],
         'hourly_short_forecast_71' : fargoHourlyShortForecast[7],
         #2nd set
-        'current_temp2' : round(((new_york.current_conditions().temperature)*9/5)+32),
+        #'current_temp2' : current_temp_2,
         'hour_12' : new_yorkHourlyTime[1],
         'hour_22' : new_yorkHourlyTime[2],
         'hour_32' : new_yorkHourlyTime[3],
@@ -171,7 +177,7 @@ def index(request):
         'hourly_short_forecast_62' : new_yorkHourlyShortForecast[6],
         'hourly_short_forecast_72' : new_yorkHourlyShortForecast[7],
         #3rd set
-        'current_temp3' : round(((florida.current_conditions().temperature)*9/5)+32),
+        #'current_temp3' : current_temp_3,
         'hour_13' : floridaHourlyTime[1],
         'hour_23' : floridaHourlyTime[2],
         'hour_33' : floridaHourlyTime[3],
@@ -201,7 +207,7 @@ def index(request):
         'hourly_short_forecast_63' : floridaHourlyShortForecast[6],
         'hourly_short_forecast_73' : floridaHourlyShortForecast[7],
         #4th set
-        'current_temp4' : round(((minnesota.current_conditions().temperature)*9/5)+32),
+        #'current_temp4' : current_temp_4,
         'hour_14' : minnesotaHourlyTime[1],
         'hour_24' : minnesotaHourlyTime[2],
         'hour_34' : minnesotaHourlyTime[3],
@@ -231,7 +237,7 @@ def index(request):
         'hourly_short_forecast_64' : minnesotaHourlyShortForecast[6],
         'hourly_short_forecast_74' : minnesotaHourlyShortForecast[7],
         #5th set
-        'current_temp5' : round(((wahpeton.current_conditions().temperature)*9/5)+32),
+        #'current_temp5' : current_temp_5,
         'hour_15' : wahpetonHourlyTime[1],
         'hour_25' : wahpetonHourlyTime[2],
         'hour_35' : wahpetonHourlyTime[3],
@@ -261,7 +267,7 @@ def index(request):
         'hourly_short_forecast_65' : wahpetonHourlyShortForecast[6],
         'hourly_short_forecast_75' : wahpetonHourlyShortForecast[7],
         #6th set
-        'current_temp6' : round(((south_dakota.current_conditions().temperature)*9/5)+32),
+        #'current_temp6' : current_temp_6,
         'hour_16' : south_dakotaHourlyTime[1],
         'hour_26' : south_dakotaHourlyTime[2],
         'hour_36' : south_dakotaHourlyTime[3],
@@ -303,36 +309,42 @@ def weekly_view(request):
     central_time = datetime.timezone(datetime.timedelta(hours=-6))
 
     #fargo weekly data
+    current_temp_1 = round(((fargo.current_conditions().temperature)*9/5)+32)
     weeklyFargo = fargo.week_forecast()
     fargoWeeklyTemp = {}
     fargoWeeklyDate = {}
     fargoWeeklyWind = {}
     fargoWeeklyShortForecast = {}
     #new_york weekly data
+    current_temp_2 = round(((new_york.current_conditions().temperature)*9/5)+32)
     weeklyNewYork= new_york.week_forecast()
     new_yorkWeeklyTemp = {}
     new_yorkWeeklyDate = {}
     new_yorkWeeklyWind = {}
     new_yorkWeeklyShortForecast = {}
     #florida weekly data
+    current_temp_3 = round(((florida.current_conditions().temperature)*9/5)+32)
     weeklyFlorida = florida.week_forecast()
     floridaWeeklyTemp = {}
     floridaWeeklyDate = {}
     floridaWeeklyWind = {}
     floridaWeeklyShortForecast = {}
     #minnesota weekly data
+    current_temp_4 = round(((minnesota.current_conditions().temperature)*9/5)+32)
     weeklyMinnesota = minnesota.week_forecast()
     minnesotaWeeklyTemp = {}
     minnesotaWeeklyDate = {}
     minnesotaWeeklyWind = {}
     minnesotaWeeklyShortForecast = {}
     #wahpeton weekly data
+    current_temp_5 = round(((wahpeton.current_conditions().temperature)*9/5)+32)
     weeklyWahpeton = wahpeton.week_forecast()
     wahpetonWeeklyTemp = {}
     wahpetonWeeklyDate = {}
     wahpetonWeeklyWind = {}
     wahpetonWeeklyShortForecast = {}
     #SD weekly data
+    current_temp_6 = round(((south_dakota.current_conditions().temperature)*9/5)+32)
     weeklySouthDakota = south_dakota.week_forecast()
     south_dakotaWeeklyTemp = {}
     south_dakotaWeeklyDate = {}
@@ -389,7 +401,7 @@ def weekly_view(request):
         q += 1
 
     context = {
-        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
+        #'current_temp1' : current_temp_1,
         'week_date_11' : fargoWeeklyDate[1],
         'week_date_21' : fargoWeeklyDate[2],
         'week_date_31' : fargoWeeklyDate[3],
@@ -419,7 +431,7 @@ def weekly_view(request):
         'week_forecast_61' : fargoWeeklyShortForecast[6],
         'week_forecast_71' : fargoWeeklyShortForecast[7],
         #2nd set
-        'current_temp2' : round(((new_york.current_conditions().temperature)*9/5)+32),
+        #'current_temp2' : current_temp_2,
         'week_date_12' : new_yorkWeeklyDate[1],
         'week_date_22' : new_yorkWeeklyDate[2],
         'week_date_32' : new_yorkWeeklyDate[3],
@@ -449,7 +461,7 @@ def weekly_view(request):
         'week_forecast_62' : new_yorkWeeklyShortForecast[6],
         'week_forecast_72' : new_yorkWeeklyShortForecast[7],
         #3rd set
-        'current_temp3' : round(((florida.current_conditions().temperature)*9/5)+32),
+        #'current_temp3' : current_temp_3,
         'week_date_13' : floridaWeeklyDate[1],
         'week_date_23' : floridaWeeklyDate[2],
         'week_date_33' : floridaWeeklyDate[3],
@@ -479,7 +491,7 @@ def weekly_view(request):
         'week_forecast_63' : floridaWeeklyShortForecast[6],
         'week_forecast_73' : floridaWeeklyShortForecast[7],
         #4th set
-        'current_temp3' : round(((minnesota.current_conditions().temperature)*9/5)+32),
+        #'current_temp3' : current_temp_4,
         'week_date_14' : minnesotaWeeklyDate[1],
         'week_date_24' : minnesotaWeeklyDate[2],
         'week_date_34' : minnesotaWeeklyDate[3],
@@ -509,7 +521,7 @@ def weekly_view(request):
         'week_forecast_64' : minnesotaWeeklyShortForecast[6],
         'week_forecast_74' : minnesotaWeeklyShortForecast[7],
         #5th set
-        'current_temp5' : round(((wahpeton.current_conditions().temperature)*9/5)+32),
+        #'current_temp5' : current_temp_5,
         'week_date_15' : wahpetonWeeklyDate[1],
         'week_date_25' : wahpetonWeeklyDate[2],
         'week_date_35' : wahpetonWeeklyDate[3],
@@ -539,7 +551,7 @@ def weekly_view(request):
         'week_forecast_65' : wahpetonWeeklyShortForecast[6],
         'week_forecast_75' : wahpetonWeeklyShortForecast[7],
         #6th set
-        'current_temp6' : round(((south_dakota.current_conditions().temperature)*9/5)+32),
+        #'current_temp6' : current_temp_6,
         'week_date_16' : south_dakotaWeeklyDate[1],
         'week_date_26' : south_dakotaWeeklyDate[2],
         'week_date_36' : south_dakotaWeeklyDate[3],
@@ -574,6 +586,7 @@ def weekly_view(request):
 def city_view_hourly(request):
     central_time = datetime.timezone(datetime.timedelta(hours=-6))
     fargo = NoaaData.at_location(46.8772, -96.7898)
+    current_temp = round(((fargo.current_conditions().temperature)*9/5)+32)
     radar = fargo.radar_gif_url
     hourlyFargo = fargo.hourly_forecast()
     fargoHourlyTemp = {}
@@ -583,6 +596,8 @@ def city_view_hourly(request):
     fargoHourlyWindD = {}
     fargoHourlyDewPoint = {}
     fargoHourlyHumidity = {}
+    fargoHourlyPrecip = {}
+    fargoHourlyHazards = fargo.alerts()
 
     x=0
     for hour in hourlyFargo:    
@@ -594,13 +609,14 @@ def city_view_hourly(request):
         fargoHourlyShortForecast[x] = hour.shortForecast
         fargoHourlyDewPoint[x] = hour.dewpoint
         fargoHourlyHumidity[x] = hour.relativeHumidity
+        fargoHourlyPrecip[x] = hour.probabilityOfPrecipitation
         
         x += 1
     
     context = {
         'radar' : radar,
-        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
-       #'hazards' : fargo.current_conditions().
+        #'current_temp1' : current_temp,
+        #'hazards' : fargoAlerts,
         'hour_11' : fargoHourlyTime[1],
         'hour_21' : fargoHourlyTime[2],
         'hour_31' : fargoHourlyTime[3],
@@ -643,6 +659,13 @@ def city_view_hourly(request):
         'hourly_rh_51' : round(fargoHourlyHumidity[5], 2),
         'hourly_rh_61' : round(fargoHourlyHumidity[6], 2),
         'hourly_rh_71' : round(fargoHourlyHumidity[7], 2),
+        'hourly_p_11' : round(fargoHourlyPrecip[1], 2),
+        'hourly_p_21' : round(fargoHourlyPrecip[2], 2),
+        'hourly_p_31' : round(fargoHourlyPrecip[3], 2),
+        'hourly_p_41' : round(fargoHourlyPrecip[4], 2),
+        'hourly_p_51' : round(fargoHourlyPrecip[5], 2),
+        'hourly_p_61' : round(fargoHourlyPrecip[6], 2),
+        'hourly_p_71' : round(fargoHourlyPrecip[7], 2),
         'hourly_short_forecast_11' : fargoHourlyShortForecast[1].replace(" ", "-"),
         'hourly_short_forecast_21' : fargoHourlyShortForecast[2].replace(" ", "-"),
         'hourly_short_forecast_31' : fargoHourlyShortForecast[3].replace(" ", "-"),
@@ -650,6 +673,7 @@ def city_view_hourly(request):
         'hourly_short_forecast_51' : fargoHourlyShortForecast[5].replace(" ", "-"),
         'hourly_short_forecast_61' : fargoHourlyShortForecast[6].replace(" ", "-"),
         'hourly_short_forecast_71' : fargoHourlyShortForecast[7].replace(" ", "-"),
+        'hourly_hazards_11' : fargoHourlyHazards,
 
     }
     return render(request, 'expanded_city_view_hourly.html', context)
@@ -657,6 +681,7 @@ def city_view_hourly(request):
 def city_view_weekly(request):
     central_time = datetime.timezone(datetime.timedelta(hours=-6))
     fargo = NoaaData.at_location(46.8772, -96.7898)
+    current_temp = round(((fargo.current_conditions().temperature)*9/5)+32)
     radar = fargo.radar_gif_url
     weeklyFargo = fargo.week_forecast()
     fargoWeeklyTemp = {}
@@ -667,6 +692,7 @@ def city_view_weekly(request):
     fargoWeeklyDewPoint = {}
     fargoWeeklyHumidity = {}
     fargoWeeklyDetailedForecast = {}
+    fargoWeeklyHazards = fargo.alerts
 
     x=0
     for week in weeklyFargo:    
@@ -684,8 +710,8 @@ def city_view_weekly(request):
     
     context = {
         'radar' : radar,
-        'current_temp1' : round(((fargo.current_conditions().temperature)*9/5)+32),
-       #'hazards' : fargo.current_conditions().
+        #'current_temp1' : current_temp,
+        #'hazards' : fargo.current_conditions().
         'weekly_11' : fargoWeeklyTime[1],
         'weekly_21' : fargoWeeklyTime[2],
         'weekly_31' : fargoWeeklyTime[3],
@@ -736,6 +762,7 @@ def city_view_weekly(request):
         'weekly_short_forecast_61' : fargoWeeklyShortForecast[6].replace(" ", "-"),
         'weekly_short_forecast_71' : fargoWeeklyShortForecast[7].replace(" ", "-"),
         'weekly_detailed_forecast_11' : fargoWeeklyDetailedForecast[1],
+        'weekly_hazards_11' : fargoWeeklyHazards,
     }
     return render(request, 'expanded_city_view_weekly.html', context)
 

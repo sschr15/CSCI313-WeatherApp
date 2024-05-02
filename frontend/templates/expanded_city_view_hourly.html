@@ -21,16 +21,16 @@
             <div class="col-md-auto"  style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; height:350px; font-size:25px; justify-content:space-between;">
                 Fargo <span style="float:right;">Current Temp: {{current_temp1}}&degF</span> <br> </a>
                 <span style="font-size:20px; word-spacing: 80px;">
-                Time    Temp  Wind   Dewpoint    Humidity   Forecast   <br>
+                Time    Temp  Wind   Dewpoint  Precipitation  Humidity   Forecast   <br>
                 </span>
                 <span style="font-size:20px; word-spacing: 25px; justify-content:space-between;">
-                {{hour_11}}&nbsp;   {{hourly_temp_11}}&degF &nbsp;  {{hourly_wind_11}}-{{hourly_windD_11}} &nbsp;   {{hourly_dp_11}}&degF &nbsp;  {{hourly_rh_11}}&degF &nbsp;  {{hourly_short_forecast_11}}   <br>
-                {{hour_21}}&nbsp;   {{hourly_temp_21}}&degF &nbsp;  {{hourly_wind_21}}-{{hourly_windD_21}} &nbsp;   {{hourly_dp_21}}&degF &nbsp;  {{hourly_rh_21}}&degF &nbsp;  {{hourly_short_forecast_21}}    <br>
-                {{hour_31}}&nbsp;   {{hourly_temp_31}}&degF &nbsp;  {{hourly_wind_31}}-{{hourly_windD_31}} &nbsp;   {{hourly_dp_31}}&degF &nbsp;  {{hourly_rh_31}}&degF &nbsp;  {{hourly_short_forecast_31}}    <br>
-                {{hour_41}}&nbsp;   {{hourly_temp_41}}&degF &nbsp;  {{hourly_wind_41}}-{{hourly_windD_41}} &nbsp;   {{hourly_dp_41}}&degF &nbsp;  {{hourly_rh_41}}&degF &nbsp;  {{hourly_short_forecast_41}}    <br>
-                {{hour_51}}&nbsp;   {{hourly_temp_51}}&degF &nbsp;  {{hourly_wind_51}}-{{hourly_windD_51}} &nbsp;   {{hourly_dp_51}}&degF &nbsp;  {{hourly_rh_51}}&degF &nbsp;  {{hourly_short_forecast_51}}    <br>
-                {{hour_61}}&nbsp;   {{hourly_temp_61}}&degF &nbsp;  {{hourly_wind_61}}-{{hourly_windD_61}} &nbsp;   {{hourly_dp_61}}&degF &nbsp;  {{hourly_rh_61}}&degF &nbsp;  {{hourly_short_forecast_61}}    <br>
-                {{hour_71}}&nbsp;   {{hourly_temp_71}}&degF &nbsp;  {{hourly_wind_71}}-{{hourly_windD_71}} &nbsp;   {{hourly_dp_71}}&degF &nbsp;  {{hourly_rh_71}}&degF &nbsp;  {{hourly_short_forecast_71}}    <br>
+                {{hour_11}}&nbsp;   {{hourly_temp_11}}&degF &nbsp;  {{hourly_wind_11}}-{{hourly_windD_11}} &nbsp;   {{hourly_dp_11}}&degF &nbsp;  {{hourly_p_11}}&degF &nbsp;  {{hourly_rh_11}}&degF &nbsp;  {{hourly_short_forecast_11}}   <br>
+                {{hour_21}}&nbsp;   {{hourly_temp_21}}&degF &nbsp;  {{hourly_wind_21}}-{{hourly_windD_21}} &nbsp;   {{hourly_dp_21}}&degF &nbsp;  {{hourly_p_21}}&degF &nbsp;  {{hourly_rh_21}}&degF &nbsp;  {{hourly_short_forecast_21}}    <br>
+                {{hour_31}}&nbsp;   {{hourly_temp_31}}&degF &nbsp;  {{hourly_wind_31}}-{{hourly_windD_31}} &nbsp;   {{hourly_dp_31}}&degF &nbsp;  {{hourly_p_31}}&degF &nbsp;  {{hourly_rh_31}}&degF &nbsp;  {{hourly_short_forecast_31}}    <br>
+                {{hour_41}}&nbsp;   {{hourly_temp_41}}&degF &nbsp;  {{hourly_wind_41}}-{{hourly_windD_41}} &nbsp;   {{hourly_dp_41}}&degF &nbsp;  {{hourly_p_41}}&degF &nbsp;  {{hourly_rh_41}}&degF &nbsp;  {{hourly_short_forecast_41}}    <br>
+                {{hour_51}}&nbsp;   {{hourly_temp_51}}&degF &nbsp;  {{hourly_wind_51}}-{{hourly_windD_51}} &nbsp;   {{hourly_dp_51}}&degF &nbsp;  {{hourly_p_51}}&degF &nbsp;  {{hourly_rh_51}}&degF &nbsp;  {{hourly_short_forecast_51}}    <br>
+                {{hour_61}}&nbsp;   {{hourly_temp_61}}&degF &nbsp;  {{hourly_wind_61}}-{{hourly_windD_61}} &nbsp;   {{hourly_dp_61}}&degF &nbsp;  {{hourly_p_61}}&degF &nbsp;  {{hourly_rh_61}}&degF &nbsp;  {{hourly_short_forecast_61}}    <br>
+                {{hour_71}}&nbsp;   {{hourly_temp_71}}&degF &nbsp;  {{hourly_wind_71}}-{{hourly_windD_71}} &nbsp;   {{hourly_dp_71}}&degF &nbsp;  {{hourly_p_71}}&degF &nbsp;  {{hourly_rh_71}}&degF &nbsp;  {{hourly_short_forecast_71}}    <br>
                 </span>
               </div>
               
@@ -41,14 +41,10 @@
                     &nbsp;
                 </div>
             </div>
-            <div class="col-md-auto"  style="background-color:rgb(220, 220, 220); text-align: center; margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; font-size:25px;">
-                <div class="text-align: center; font-size: 25px;">
-                    Lunar
-                </div>
-            </div>
             <div class="col-md-auto"  style="background-color:rgb(220, 220, 220); margin-top: 1%; margin-bottom:1%; margin-left:1%; margin-right:1%; font-size:25px; text-align:center;">
                 <div class="text-align: center; font-size: 25px;">
                     Weather Watch
+                    {{hourly_hazards_11}}
                 </div>
             </div>
         </div>
